@@ -177,16 +177,16 @@ Cube.prototype.orbit = function (cubes, axis) {
     }
 };
 
+// NOTE: These won't actually be used since it is initialized from a random state, 
+//    but this is good for testing
 function rotateYellow() {
-    // even parity, so increment by 2 each time
-    for (var i = 0; i < drawables.length; i += 2) {
+    for (var i = 0; i < 9; i++) {
         drawables[i].startTurn(Y_AXIS);
     }
 }
 
 function rotateWhite() {
-    // odd parity
-    for (var i = 1; i < drawables.length; i += 2) {
+    for (var i = 9; i < 18; i++) {
         drawables[i].startTurn(Y_AXIS);
     }
 }
@@ -209,22 +209,20 @@ window.onload = function() {
         vec4(1.0, 0.0, 0.0, 1.0)    // red - left
     ];
 
-    // yellow (top) has even parity
+    // yellow (top) is in beginning of array (0-8)
     var yellow = makeSide(shaders, colors, Y_AXIS);
     for (var i in yellow) {
         yellow[i].move(1, Y_AXIS);
-        drawables[i * 2] = yellow[i];
+        drawables.push(yellow[i]);
     }
 
-    // white (bottom) has odd parity
+    // white (bottom) is next in array (9-17)
     var white = makeSide(shaders, colors, Y_AXIS);
     for (var i in white) {
         white[i].move(-1, Y_AXIS);
-        drawables[i * 2 + 1] = white[i];
+        drawables.push(white[i]);
     }
-        
-   rotateYellow();
-    
+            
     renderScene(); // begin render loop
 }
 
@@ -245,7 +243,7 @@ function makeSide(shaders, colors, axis) {
         AXIS_2 = Y_AXIS;
     }
 
-  var side = []
+    var side = [];
   
   for(var i = 0; i < 9; i++) {
     side.push(new Cube(shaders, colors));

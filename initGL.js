@@ -37,25 +37,25 @@ function initGL()
     projection = mult(projection, camera);
 
     // set up an event handler for this button
-    var a = document.getElementById("Btn_TR");
+    var a = document.getElementById("Btn_YELLOW");
     a.addEventListener("click",
         function(){
             /* TODO - This button should start 90deg
                 rotation (to the right) of the top cube. */
             disableBtns();
-            drawables[1].startRightTurn();  // drawables[1] = ctop...doesn't seem like best way...
+            rotateYellow();
         },
         false
     );
 
     // set up an event handler for this button
-    var b = document.getElementById("Btn_TL");
+    var b = document.getElementById("Btn_WHITE");
     b.addEventListener("click",
         function(){
             /* TODO - This button should start a -90deg
                 rotation (to the left) of the top cube. */
             disableBtns();
-            drawables[1].startLeftTurn();
+            rotateWhite();
         },
         false
     );
@@ -95,11 +95,11 @@ var renderScene = function(){
 }
 
 function disableBtns() {
-    document.getElementById('Btn_TL').disabled = true;
-    document.getElementById('Btn_TR').disabled = true;
+    document.getElementById('Btn_YELLOW').disabled = true;
+    document.getElementById('Btn_WHITE').disabled = true;
 }
 
 function enableBtns() {
-    document.getElementById('Btn_TL').disabled = false;
-    document.getElementById('Btn_TR').disabled = false;
+    document.getElementById('Btn_YELLOW').disabled = false;
+    document.getElementById('Btn_WHITE').disabled = false;
 }
