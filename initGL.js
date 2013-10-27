@@ -36,30 +36,6 @@ function initGL()
 
     projection = mult(projection, camera);
 
-    // set up an event handler for this button
-    var a = document.getElementById("Btn_YELLOW");
-    a.addEventListener("click",
-        function(){
-            /* TODO - This button should start 90deg
-                rotation (to the right) of the top cube. */
-            disableBtns();
-            rotateYellow();
-        },
-        false
-    );
-
-    // set up an event handler for this button
-    var b = document.getElementById("Btn_WHITE");
-    b.addEventListener("click",
-        function(){
-            /* TODO - This button should start a -90deg
-                rotation (to the left) of the top cube. */
-            disableBtns();
-            rotateWhite();
-        },
-        false
-    );
-
     // set up an event handler for projection buttons
     // Camera is set up slightly above the cube looking at a corner
     var c = document.getElementById("Btn_Ortho");
@@ -77,6 +53,66 @@ function initGL()
         camera = lookAt([3, 2, 3], [0, 0, 0], [0, 1, 0]);
         projection = mult(projection, camera);
     }, false);
+
+    btns = [
+        document.getElementById('Btn_RED'),
+        document.getElementById('Btn_ORANGE'),
+        document.getElementById('Btn_YELLOW'),
+        document.getElementById('Btn_GREEN'),
+        document.getElementById('Btn_BLUE'),
+        document.getElementById('Btn_WHITE')
+    ];
+
+    console.log(btns);
+
+    // set up an event handler for rotating all faces
+    btns[0].addEventListener("click",
+        function () {
+            disableBtns();
+            rotateRed();
+        },
+        false
+    );
+
+    btns[1].addEventListener("click",
+        function () {
+            disableBtns();
+            rotateOrange();
+        },
+        false
+    );
+
+    btns[2].addEventListener("click",
+        function () {
+            disableBtns();
+            rotateYellow();
+        },
+        false
+    );
+
+    btns[3].addEventListener("click",
+        function () {
+            disableBtns();
+            rotateGreen();
+        },
+        false
+    );
+
+    btns[4].addEventListener("click",
+        function () {
+            disableBtns();
+            rotateBlue();
+        },
+        false
+    );
+
+    btns[5].addEventListener("click",
+        function () {
+            disableBtns();
+            rotateWhite();
+        },
+        false
+    );
 }
 
 /* Global render callback - would draw multiple objects if there were more than one */
@@ -95,11 +131,11 @@ var renderScene = function(){
 }
 
 function disableBtns() {
-    document.getElementById('Btn_YELLOW').disabled = true;
-    document.getElementById('Btn_WHITE').disabled = true;
+    for (var i in btns)
+        btns[i].disabled = true;
 }
 
 function enableBtns() {
-    document.getElementById('Btn_YELLOW').disabled = false;
-    document.getElementById('Btn_WHITE').disabled = false;
+    for (var i in btns)
+        btns[i].disabled = false;
 }

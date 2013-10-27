@@ -300,8 +300,6 @@ window.onload = function() {
         bottom[6]
     ];
 
-    rotateRed();
-
     renderScene(); // begin render loop
 }
 
