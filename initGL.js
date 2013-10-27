@@ -31,8 +31,8 @@ function initGL()
     projection = ortho(-2, 2, -1.5, 1.5, -100, 100);
 //    projection = mult(projection, rotate(30, [0.5, 1, 0.12]));
 
-//    projection = perspective(45, canvas.width / canvas.height, 1, 100);
-    var camera = lookAt([3, 2, 3], [0, 0, 0], [0, 1, 0]);
+    projection = perspective(45, canvas.width / canvas.height, 1, 100);
+    var camera = lookAt([3, 2, 6], [0, 0, 0], [0, 1, 0]);
 
     projection = mult(projection, camera);
 
@@ -62,8 +62,6 @@ function initGL()
         document.getElementById('Btn_BLUE'),
         document.getElementById('Btn_WHITE')
     ];
-
-    console.log(btns);
 
     // set up an event handler for rotating all faces
     btns[0].addEventListener("click",
