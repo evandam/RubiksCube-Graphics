@@ -66,7 +66,7 @@ Cube.prototype.draw = function(){
 
     /* Check if the cube needs to be turned. Enable buttons on last turn. */
     if (this.turns > 0) {
-        this.turn(1, this.ROTATION_AXIS);
+        this.turn(-1, this.ROTATION_AXIS);
         this.turns--;
         if (this.turns === 0)
             enableBtns();
@@ -199,19 +199,19 @@ function rotateOrange() {
 
 function rotateBlue() {
     for (var i in blue) {
-        blue[i].startTurn(Y_AXIS);
+        blue[i].startTurn(Z_AXIS);
     }
 }
 
 function rotateGreen() {
     for (var i in green) {
-        green[i].startTurn(Y_AXIS);
+        green[i].startTurn(Z_AXIS);
     }
 }
 
 function rotateRed() {
     for (var i in red) {
-        red[i].startTurn(Y_AXIS);
+        red[i].startTurn(X_AXIS);
     }
 }
 
@@ -266,8 +266,41 @@ window.onload = function() {
         bottom[7],
         bottom[8]
     ];
+    green = [
+        top[3],
+        top[6],
+        top[8],
+        middle[3],
+        middle[6],
+        middle[8],
+        bottom[3],
+        bottom[6],
+        bottom[8]
+    ];
+    blue = [
+        top[4],
+        top[5],
+        top[7],
+        middle[4],
+        middle[5],
+        middle[7],
+        bottom[4],
+        bottom[5],
+        bottom[7]
+    ];
+    red = [
+        top[2],
+        top[5],
+        top[6],
+        middle[2],
+        middle[5],
+        middle[6],
+        bottom[2],
+        bottom[5],
+        bottom[6]
+    ];
 
-    rotateOrange();
+    rotateRed();
 
     renderScene(); // begin render loop
 }
