@@ -180,17 +180,40 @@ Cube.prototype.orbit = function (cubes, axis) {
 // NOTE: These won't actually be used since it is initialized from a random state, 
 //    but this is good for testing
 function rotateYellow() {
-    for (var i = 0; i < 9; i++) {
-        drawables[i].startTurn(Y_AXIS);
+    for (var i in yellow) {
+        yellow[i].startTurn(Y_AXIS);
     }
 }
 
 function rotateWhite() {
-    for (var i = 9; i < 18; i++) {
-        drawables[i].startTurn(Y_AXIS);
+    for (var i in white) {
+        white[i].startTurn(Y_AXIS);
     }
 }
 
+function rotateOrange() {
+    for (var i in orange) {
+        orange[i].startTurn(X_AXIS);
+    }
+}
+
+function rotateBlue() {
+    for (var i in blue) {
+        blue[i].startTurn(Y_AXIS);
+    }
+}
+
+function rotateGreen() {
+    for (var i in green) {
+        green[i].startTurn(Y_AXIS);
+    }
+}
+
+function rotateRed() {
+    for (var i in red) {
+        red[i].startTurn(Y_AXIS);
+    }
+}
 
 /* Set up event callback to start the application */
 window.onload = function() {
@@ -209,20 +232,43 @@ window.onload = function() {
         vec4(1.0, 0.0, 0.0, 1.0)    // red - left
     ];
 
-    // yellow (top) is in beginning of array (0-8)
-    var yellow = makeSide(shaders, colors, Y_AXIS);
-    for (var i in yellow) {
-        yellow[i].move(1, Y_AXIS);
-        drawables.push(yellow[i]);
+
+    // top row of cubes (yellow)
+    var top = makeSide(shaders, colors, Y_AXIS);
+    for (var i in top) {
+        top[i].move(1.01, Y_AXIS);
+        drawables.push(top[i]);
     }
 
     // white (bottom) is next in array (9-17)
-    var white = makeSide(shaders, colors, Y_AXIS);
-    for (var i in white) {
-        white[i].move(-1, Y_AXIS);
-        drawables.push(white[i]);
+    var bottom = makeSide(shaders, colors, Y_AXIS);
+    for (var i in bottom) {
+        bottom[i].move(-1.01, Y_AXIS);
+        drawables.push(bottom[i]);
     }
-            
+
+    var middle = makeSide(shaders, colors, Y_AXIS);
+    for (var i in middle) {
+        drawables.push(middle[i]);
+    }
+    
+
+    yellow = top;   // all cubes of top row are yellow
+    white = bottom; // all cubes on bottom are white
+    orange = [
+        top[1],
+        top[7],
+        top[8],
+        middle[1],
+        middle[7],
+        middle[8],
+        bottom[1],
+        bottom[7],
+        bottom[8]
+    ];
+
+    rotateOrange();
+
     renderScene(); // begin render loop
 }
 
@@ -249,29 +295,27 @@ function makeSide(shaders, colors, axis) {
     side.push(new Cube(shaders, colors));
   }
                                   
-  side[1].move(1.0, AXIS_1);   
+  side[1].move(1.01, AXIS_1);   
   
-  side[2].move(-1.0, AXIS_1); 
+  side[2].move(-1.01, AXIS_1); 
   
-  side[3].move(1.0, AXIS_2);  
+  side[3].move(1.01, AXIS_2);  
   
-  side[4].move(-1.0, AXIS_2);  
+  side[4].move(-1.01, AXIS_2);  
  
-  side[5].move(-1.0, AXIS_2);  
-  side[5].move(-1.0, AXIS_1);
+  side[5].move(-1.01, AXIS_2);  
+  side[5].move(-1.01, AXIS_1);
   
-  side[6].move(1.0, AXIS_2);  
-  side[6].move(-1.0, AXIS_1);
+  side[6].move(1.01, AXIS_2);  
+  side[6].move(-1.01, AXIS_1);
   
-  side[7].move(-1.0, AXIS_2); 
-  side[7].move(1.0, AXIS_1);
+  side[7].move(-1.01, AXIS_2); 
+  side[7].move(1.01, AXIS_1);
   
-  side[8].move(1.0, AXIS_2);   
-  side[8].move(1.0, AXIS_1);
+  side[8].move(1.01, AXIS_2);   
+  side[8].move(1.01, AXIS_1);
   
   return side;
   
 }
-
-
 
