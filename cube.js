@@ -37,7 +37,10 @@ Cube.prototype.init = function(program, faceColors)
     gl.bindBuffer( gl.ARRAY_BUFFER, this.vBufferId ); // set active array buffer
     /* send vert positions to the buffer, must repeat this
        wherever we change the vert positions for this cube */
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points), gl.STATIC_DRAW );
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(this.points), gl.STATIC_DRAW);
+
+    // keep a variable that determines which way to rotate the cube
+    this.ROTATION_AXIS = 0;
 }
 
 Cube.prototype.draw = function(){
@@ -62,16 +65,10 @@ Cube.prototype.draw = function(){
     gl.enableVertexAttribArray( vPosId );
 
     /* Check if the cube needs to be turned. Enable buttons on last turn. */
-    if (this.left_turns > 0) {
-        this.turn(1, Y_AXIS);
-        this.left_turns--;
-        if (this.left_turns === 0)
-            enableBtns();
-    }
-    else if (this.right_turns > 0) {
-        this.turn(-1, Y_AXIS);
-        this.right_turns--;
-        if (this.right_turns === 0)
+    if (this.turns > 0) {
+        this.turn(1, this.ROTATION_AXIS);
+        this.turns--;
+        if (this.turns === 0)
             enableBtns();
     }
 
@@ -168,12 +165,32 @@ Cube.prototype.turn = function(angle, axis){
 }
 
 /* Init the member var so it will be read in the draw function */
-Cube.prototype.startLeftTurn = function () {
-    this.left_turns = 90;
+Cube.prototype.startTurn = function (axis) {
+    this.turns = 90;
+    this.ROTATION_AXIS = axis;
 }
-Cube.prototype.startRightTurn = function () {
-    this.right_turns = 90;
+
+// Rotate a subset of cubies along an axis around the origin
+Cube.prototype.orbit = function (cubes, axis) {
+    for (cube in cubes) {
+        cubes[cube].startTurn(axis);
+    }
+};
+
+function rotateYellow() {
+    // even parity, so increment by 2 each time
+    for (var i = 0; i < drawables.length; i += 2) {
+        drawables[i].startTurn(Y_AXIS);
+    }
 }
+
+function rotateWhite() {
+    // odd parity
+    for (var i = 1; i < drawables.length; i += 2) {
+        drawables[i].startTurn(Y_AXIS);
+    }
+}
+
 
 /* Set up event callback to start the application */
 window.onload = function() {
@@ -191,69 +208,72 @@ window.onload = function() {
         vec4(0.0, 0.0, 1.0, 1.0),   // blue - back
         vec4(1.0, 0.0, 0.0, 1.0)    // red - left
     ];
-   
-    var front = makeSide(shaders, colors);
-    for(i in front) {
-      front[i].move(1, Z_AXIS);
-      drawables.push(front[i]);
+
+    // yellow (top) has even parity
+    var yellow = makeSide(shaders, colors, Y_AXIS);
+    for (var i in yellow) {
+        yellow[i].move(1, Y_AXIS);
+        drawables[i * 2] = yellow[i];
     }
-    
-    back = makeSide(shaders, colors);
-    for(i in back) {
-      back[i].move(-1, Z_AXIS);
-      drawables.push(back[i]);
-    }
-    
-    mid = makeSide(shaders, colors);
-    for(i in mid) {
-      drawables.push(mid[i]);
+
+    // white (bottom) has odd parity
+    var white = makeSide(shaders, colors, Y_AXIS);
+    for (var i in white) {
+        white[i].move(-1, Y_AXIS);
+        drawables[i * 2 + 1] = white[i];
     }
         
-    orbit();
+   rotateYellow();
     
     renderScene(); // begin render loop
 }
 
-function makeSide(shaders, colors) {
+// a helper function that makes 9 cubes at a time along a specified axis
+function makeSide(shaders, colors, axis) {
+    var AXIS_1, AXIS_2;
+
+    if (axis == X_AXIS) {
+        AXIS_1 = Y_AXIS;
+        AXIS_2 = Z_AXIS;
+    }
+    else if (axis == Y_AXIS) {
+        AXIS_1 = X_AXIS;
+        AXIS_2 = Z_AXIS;
+    }
+    else {
+        AXIS_1 = X_AXIS;
+        AXIS_2 = Y_AXIS;
+    }
+
   var side = []
   
   for(var i = 0; i < 9; i++) {
     side.push(new Cube(shaders, colors));
   }
                                   
-  side[1].move(1.0, X_AXIS);   
+  side[1].move(1.0, AXIS_1);   
   
-  side[2].move(-1.0, X_AXIS); 
+  side[2].move(-1.0, AXIS_1); 
   
-  side[3].move(1.0, Y_AXIS);  
+  side[3].move(1.0, AXIS_2);  
   
-  side[4].move(-1.0, Y_AXIS);  
+  side[4].move(-1.0, AXIS_2);  
  
-  side[5].move(-1.0, Y_AXIS);  
-  side[5].move(-1.0, X_AXIS);
+  side[5].move(-1.0, AXIS_2);  
+  side[5].move(-1.0, AXIS_1);
   
-  side[6].move(1.0, Y_AXIS);  
-  side[6].move(-1.0, X_AXIS);
+  side[6].move(1.0, AXIS_2);  
+  side[6].move(-1.0, AXIS_1);
   
-  side[7].move(-1.0, Y_AXIS); 
-  side[7].move(1.0, X_AXIS);
+  side[7].move(-1.0, AXIS_2); 
+  side[7].move(1.0, AXIS_1);
   
-  side[8].move(1.0, Y_AXIS);   
-  side[8].move(1.0, X_AXIS);
+  side[8].move(1.0, AXIS_2);   
+  side[8].move(1.0, AXIS_1);
   
   return side;
   
 }
 
-// start off by trying to orbit the cubes on green face(drawables[0-9])
-// need to think about arranging cubes to get a side mathematically...want to just work on orbit function for now...
-function orbit() {
-  var cubes = drawables.slice(0, 9);
-  var center = cubes[0];  // for now...translate about center of this
-  for(cube in cubes) {
-    cubes[cube].startLeftTurn();
-    
-  }
-}
 
 
