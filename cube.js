@@ -17,8 +17,11 @@ var Cube = function (program, faceColors) { this.init(program, faceColors); }
 /* Initialize properties of this color cube object. 
  */
 
-var topCubes, middleCubes, bottomCubes;
-var red, orange, yellow, green, blue, white;
+// use this along with the drawables array.
+// this array holds the index position for each cubie
+var cubePositions = [];
+for (var i = 0; i < 27; i++)
+    cubePositions[i] = i;
 
 Cube.prototype.init = function(program, faceColors)
 {
@@ -184,19 +187,37 @@ Cube.prototype.orbit = function (cubes, axis) {
 // NOTE: These won't actually be used since it is initialized from a random state, 
 //    but this is good for testing
 function rotateYellow() {
-    for (var i in yellow) {
-        yellow[i].startTurn(Y_AXIS);
-    }
-    var tmp_cubes = topCubes.splice(0);
+    var cubes = getYellow();
+    for (var i in cubes) {
+        cubes[i].startTurn(Y_AXIS);
 
-    topCubes[1] = tmp_cubes[3];
-    topCubes[2] = tmp_cubes[4];
-    topCubes[3] = tmp_cubes[2];
-    topCubes[4] = tmp_cubes[1];
-    topCubes[5] = tmp_cubes[7];
-    topCubes[6] = tmp_cubes[5];
-    topCubes[7] = tmp_cubes[8];
-    topCubes[8] = tmp_cubes[6];
+        switch (cubePositions[i]) {
+            case 1:
+                cubePositions[i] = 4;
+                break;
+            case 2:
+                cubePositions[i] = 3;
+                break;
+            case 3:
+                cubePositions[i] = 1;
+                break;
+            case 4:
+                cubePositions[i] = 2;
+                break;
+            case 5:
+                cubePositions[i] = 6;
+                break;
+            case 6:
+                cubePositions[i] = 8;
+                break;
+            case 7:
+                cubePositions[i] = 5;
+                break;
+            default:
+                cubePositions[i] = 7;
+                break;
+        }
+    }
 }
 
 function rotateWhite() {
@@ -266,9 +287,13 @@ window.onload = function() {
         drawables.push(bottomCubes[i]);
     }
     
-
-    yellow = drawables.slice(0, 9);   // all cubes of top row are yellow
-    white = drawables.slice(19, 27);   // all cubes on bottom are white
+    // all cubes on bottom are white
+    var getWhite = function () {
+        for (var i = 18; i < drawables.length; i++) {
+            // white cubes in last 9 positions
+            white.push(drawables[cubePositions[i]]);
+        }
+    }
     orange = [
         drawables[1],
         drawables[7],
@@ -364,3 +389,12 @@ function makeSide(shaders, colors, axis) {
   
 }
 
+// all cubes of top row are yellow
+function getYellow() {
+    var cubes = [];
+    for (var i = 0; i < 9; i++) {
+        // yellow cubes in first 9 positions
+        cubes.push(drawables[cubePositions[i]]);
+    }
+    return cubes;
+}
