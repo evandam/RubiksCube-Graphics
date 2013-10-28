@@ -16,6 +16,10 @@ var Cube = function (program, faceColors) { this.init(program, faceColors); }
 
 /* Initialize properties of this color cube object. 
  */
+
+var topCubes, middleCubes, bottomCubes;
+var red, orange, yellow, green, blue, white;
+
 Cube.prototype.init = function(program, faceColors)
 {
     this.points = []; // this array will hold raw vertex positions
@@ -183,6 +187,16 @@ function rotateYellow() {
     for (var i in yellow) {
         yellow[i].startTurn(Y_AXIS);
     }
+    var tmp_cubes = topCubes.splice(0);
+
+    topCubes[1] = tmp_cubes[3];
+    topCubes[2] = tmp_cubes[4];
+    topCubes[3] = tmp_cubes[2];
+    topCubes[4] = tmp_cubes[1];
+    topCubes[5] = tmp_cubes[7];
+    topCubes[6] = tmp_cubes[5];
+    topCubes[7] = tmp_cubes[8];
+    topCubes[8] = tmp_cubes[6];
 }
 
 function rotateWhite() {
@@ -234,70 +248,70 @@ window.onload = function() {
 
 
     // top row of cubes (yellow)
-    var top = makeSide(shaders, colors, Y_AXIS);
-    for (var i in top) {
-        top[i].move(1.01, Y_AXIS);
-        drawables.push(top[i]);
+    var topCubes = makeSide(shaders, colors, Y_AXIS);
+    for (var i in topCubes) {
+        topCubes[i].move(1.01, Y_AXIS);
+        drawables.push(topCubes[i]);
+    }
+
+    var middleCubes = makeSide(shaders, colors, Y_AXIS);
+    for (var i in middleCubes) {
+        drawables.push(middleCubes[i]);
     }
 
     // white (bottom) is next in array (9-17)
-    var bottom = makeSide(shaders, colors, Y_AXIS);
-    for (var i in bottom) {
-        bottom[i].move(-1.01, Y_AXIS);
-        drawables.push(bottom[i]);
-    }
-
-    var middle = makeSide(shaders, colors, Y_AXIS);
-    for (var i in middle) {
-        drawables.push(middle[i]);
+    var bottomCubes = makeSide(shaders, colors, Y_AXIS);
+    for (var i in bottomCubes) {
+        bottomCubes[i].move(-1.01, Y_AXIS);
+        drawables.push(bottomCubes[i]);
     }
     
 
-    yellow = top;   // all cubes of top row are yellow
-    white = bottom; // all cubes on bottom are white
+    yellow = drawables.slice(0, 9);   // all cubes of top row are yellow
+    white = drawables.slice(19, 27);   // all cubes on bottom are white
     orange = [
-        top[1],
-        top[7],
-        top[8],
-        middle[1],
-        middle[7],
-        middle[8],
-        bottom[1],
-        bottom[7],
-        bottom[8]
+        drawables[1],
+        drawables[7],
+        drawables[8],
+        drawables[10],
+        drawables[16],
+        drawables[17],
+        drawables[19],
+        drawables[25],
+        drawables[26]
     ];
     green = [
-        top[3],
-        top[6],
-        top[8],
-        middle[3],
-        middle[6],
-        middle[8],
-        bottom[3],
-        bottom[6],
-        bottom[8]
+        drawables[3],
+        drawables[6],
+        drawables[8],
+        drawables[12],
+        drawables[15],
+        drawables[17],
+        drawables[21],
+        drawables[24],
+        drawables[26]
     ];
     blue = [
-        top[4],
-        top[5],
-        top[7],
-        middle[4],
-        middle[5],
-        middle[7],
-        bottom[4],
-        bottom[5],
-        bottom[7]
+        drawables[4],
+        drawables[5],
+        drawables[7],
+        drawables[13],
+        drawables[14],
+        drawables[16],
+        drawables[22],
+        drawables[23],
+        drawables[25]
     ];
     red = [
-        top[2],
-        top[5],
-        top[6],
-        middle[2],
-        middle[5],
-        middle[6],
-        bottom[2],
-        bottom[5],
-        bottom[6]
+        drawables[2],
+        drawables[5],
+        drawables[6],
+        drawables[11],
+        drawables[14],
+        drawables[15],
+        drawables[20],
+        drawables[23],
+        drawables[24]
     ];
 
     renderScene(); // begin render loop
@@ -326,24 +340,24 @@ function makeSide(shaders, colors, axis) {
     side.push(new Cube(shaders, colors));
   }
                                   
-  side[1].move(1.01, AXIS_1);   
+  side[1].move(1.01, AXIS_1);   // right-center
   
-  side[2].move(-1.01, AXIS_1); 
+  side[2].move(-1.01, AXIS_1);  // left-center
   
-  side[3].move(1.01, AXIS_2);  
+  side[3].move(1.01, AXIS_2);   // top-center
   
-  side[4].move(-1.01, AXIS_2);  
+  side[4].move(-1.01, AXIS_2);  // bottom-center
  
-  side[5].move(-1.01, AXIS_2);  
+  side[5].move(-1.01, AXIS_2);  // bottom-left
   side[5].move(-1.01, AXIS_1);
   
-  side[6].move(1.01, AXIS_2);  
+  side[6].move(1.01, AXIS_2);   // top-left
   side[6].move(-1.01, AXIS_1);
   
-  side[7].move(-1.01, AXIS_2); 
+  side[7].move(-1.01, AXIS_2);  // bottom-right
   side[7].move(1.01, AXIS_1);
   
-  side[8].move(1.01, AXIS_2);   
+  side[8].move(1.01, AXIS_2);   // top-right
   side[8].move(1.01, AXIS_1);
   
   return side;
