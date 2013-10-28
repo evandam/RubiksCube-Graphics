@@ -199,9 +199,39 @@ Cube.prototype.rotateSide = function (sideIndexes, axis) {
         // we want to rotate any cubes in these positions
         if (sideIndexes.indexOf(cubePositions[i]) > -1) {
             drawables[cubePositions[i]].startTurn(axis);
-            // cubePositions[sideIndexes[i]] = getNewIndex(sideIndexes[i]);
         }
     }
+    // now swap positions
+    var newPositions = cubePositions.splice(0);
+    for (var i = 0; i < sideIndexes.length / 2; i++) {
+        switch (sideIndexes[i]) {
+            case 1:
+                newPositions[i] = sideIndexes[3];
+                break;
+            case 2:
+                newPositions[i] = sideIndexes[4];
+                break;
+            case 3:
+                newPositions[i] = sideIndexes[2];
+                break;
+            case 4:
+                newPositions[i] = sideIndexes[1];
+                break;
+            case 5:
+                newPositions[i] = sideIndexes[7];
+                break;
+            case 6:
+                newPositions[i] = sideIndexes[5];
+                break;
+            case 7:
+                newPositions[i] = sideIndexes[8];
+                break;
+            default:
+                newPositions[i] = sideIndexes[6];
+        }
+    }
+    cubePositions = newPositions;
+
 }
 // NOTE: These won't actually be used since it is initialized from a random state, 
 //    but this is good for testing
