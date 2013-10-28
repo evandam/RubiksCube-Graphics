@@ -62,9 +62,9 @@ main()
 }
   </script>
 
-  <script type="text/javascript" src="../Common/webgl-utils.js"></script>
-  <script type="text/javascript" src="../Common/initShaders.js"></script>
-  <script type="text/javascript" src="../Common/MV.js"></script>
+  <script type="text/javascript" src="./Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="./Common/initShaders.js"></script>
+  <script type="text/javascript" src="./Common/MV.js"></script>
   <script type="text/javascript" src="initGL.js"></script>
   <script type="text/javascript" src="cube.js"></script>
 </head>
@@ -72,16 +72,20 @@ main()
     <canvas id="gl-canvas" width="1024" height="768">Oops ...
         your browser doesn't support the HTML5 canvas element</canvas>
     <div>
-        <button id = "Btn_RED"> Red </button>
-        <button id = "Btn_ORANGE"> Orange </button>
-        <button id="Btn_YELLOW"> Yellow </button>
-        <button id="Btn_GREEN"> Green </button>
-        <button id="Btn_BLUE"> Blue </button>
-        <button id="Btn_WHITE"> White  </button>
-    </div>
-    <div>
         <button id="Btn_Ortho">Orthogonal </button>
         <button id="Btn_Perspective"> Perspective </button>
+	<!--	<button id="Btn_Orbit"> Orbit </button> -->
     </div>
+	<div>
+		<button id="Btn_TopR"> Yellow </button>
+		<button id="Btn_BotR"> White </button>
+		<button id="Btn_LeftR"> Green </button>
+		<button id="Btn_RightR"> Blue </button>
+		<button id="Btn_RedR"> Red </button>
+		<button id="Btn_FrontR"> Orange </button>
+		
+		
+	</div>
+	
 </body>
 </html>

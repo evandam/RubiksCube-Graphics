@@ -16,22 +16,6 @@ var Cube = function (program, faceColors) { this.init(program, faceColors); }
 
 /* Initialize properties of this color cube object. 
  */
-
-// use this along with the drawables array.
-// this array holds the index position for each cubie
-var cubePositions = [];
-for (var i = 0; i < 27; i++)
-    cubePositions[i] = i;
-
-// indexes for each color in the positions array
-var yellow = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-var white = [18, 19, 20, 21, 22, 23, 24, 25, 26];
-var orange = [1, 7, 8, 10, 16, 17, 19, 25, 26];
-var green = [3, 6, 8, 12, 15, 17, 21, 24, 26];
-var blue = [4, 5, 7, 13, 14, 16, 22, 23, 25];
-var red = [2, 5, 6, 11, 14, 15, 20, 23, 24];
-
-
 Cube.prototype.init = function(program, faceColors)
 {
     this.points = []; // this array will hold raw vertex positions
@@ -53,10 +37,7 @@ Cube.prototype.init = function(program, faceColors)
     gl.bindBuffer( gl.ARRAY_BUFFER, this.vBufferId ); // set active array buffer
     /* send vert positions to the buffer, must repeat this
        wherever we change the vert positions for this cube */
-    gl.bufferData(gl.ARRAY_BUFFER, flatten(this.points), gl.STATIC_DRAW);
-
-    // keep a variable that determines which way to rotate the cube
-    this.ROTATION_AXIS = 0;
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points), gl.STATIC_DRAW );
 }
 
 Cube.prototype.draw = function(){
@@ -81,10 +62,45 @@ Cube.prototype.draw = function(){
     gl.enableVertexAttribArray( vPosId );
 
     /* Check if the cube needs to be turned. Enable buttons on last turn. */
-    if (this.turns > 0) {
-        this.turn(-1, this.ROTATION_AXIS);
-        this.turns--;
-        if (this.turns === 0)
+    if (this.right_turns > 0) {
+        this.turn(-1, Y_AXIS);
+        this.right_turns--;
+        if (this.right_turns === 0)
+            enableBtns();
+    }
+	
+	else if (this.left_turns > 0) {
+        this.turn(1, Y_AXIS);
+        this.left_turns--;
+        if (this.left_turns === 0)
+            enableBtns();
+    }
+
+	else if (this.forward_turns > 0) {
+        this.turn(-1, Z_AXIS);
+        this.forward_turns--;
+        if (this.forward_turns === 0)
+            enableBtns();
+    }
+	
+	else if (this.backward_turns > 0) {
+        this.turn(1, Z_AXIS);
+        this.backward_turns--;
+        if (this.backward_turns === 0)
+            enableBtns();
+    }
+	
+	else if (this.near_turns > 0) {
+        this.turn(-1, X_AXIS);
+        this.near_turns--;
+        if (this.near_turns === 0)
+            enableBtns();
+    }
+	
+	else if (this.far_turns > 0) {
+        this.turn(-1, X_AXIS);
+        this.far_turns--;
+        if (this.far_turns === 0)
             enableBtns();
     }
 
@@ -139,7 +155,7 @@ Cube.prototype.mkquad = function(a, b, c, d, color)
     this.points.push( vec4(this.vertices[c]) );
 
     this.points.push( vec4(this.vertices[d]) );
-    
+
     // push all colors at once since same now
     for (var i = 0; i < 6; i++)
         this.colors.push(color);
@@ -181,90 +197,31 @@ Cube.prototype.turn = function(angle, axis){
 }
 
 /* Init the member var so it will be read in the draw function */
-Cube.prototype.startTurn = function (axis) {
-    this.turns = 90;
-    this.ROTATION_AXIS = axis;
+Cube.prototype.startLeftTurn = function () {
+    this.left_turns = 90;
 }
-
-// Rotate a subset of cubies along an axis around the origin
-Cube.prototype.orbit = function (cubes, axis) {
-    for (cube in cubes) {
-        cubes[cube].startTurn(axis);
-    }
-};
-
-// side is the global array of index positions for that side
-Cube.prototype.rotateSide = function (sideIndexes, axis) {
-    for (var i = 0; i < cubePositions.length; i++) {
-        // we want to rotate any cubes in these positions
-        if (sideIndexes.indexOf(cubePositions[i]) > -1) {
-            drawables[cubePositions[i]].startTurn(axis);
-        }
-    }
-    // now swap positions
-    var newPositions = cubePositions.splice(0);
-    for (var i = 0; i < sideIndexes.length / 2; i++) {
-        switch (sideIndexes[i]) {
-            case 1:
-                newPositions[i] = sideIndexes[3];
-                break;
-            case 2:
-                newPositions[i] = sideIndexes[4];
-                break;
-            case 3:
-                newPositions[i] = sideIndexes[2];
-                break;
-            case 4:
-                newPositions[i] = sideIndexes[1];
-                break;
-            case 5:
-                newPositions[i] = sideIndexes[7];
-                break;
-            case 6:
-                newPositions[i] = sideIndexes[5];
-                break;
-            case 7:
-                newPositions[i] = sideIndexes[8];
-                break;
-            default:
-                newPositions[i] = sideIndexes[6];
-        }
-    }
-    cubePositions = newPositions;
-
+Cube.prototype.startRightTurn = function () {
+    this.right_turns = 90;
 }
-// NOTE: These won't actually be used since it is initialized from a random state, 
-//    but this is good for testing
-function rotateYellow() {
-    Cube.prototype.rotateSide(yellow, Y_AXIS);
+Cube.prototype.startForwardTurn = function () {
+    this.forward_turns = 90;
 }
-
-function rotateWhite() {
-    Cube.prototype.rotateSide(white, Y_AXIS);
+Cube.prototype.startBackwardTurn = function () {
+    this.backward_turns = 90;
 }
-
-function rotateOrange() {
-    Cube.prototype.rotateSide(orange, X_AXIS);
+Cube.prototype.startFarTurn = function () {
+    this.far_turns = 90;
 }
-
-function rotateBlue() {
-    Cube.prototype.rotateSide(blue, Z_AXIS);
-}
-
-function rotateGreen() {
-    Cube.prototype.rotateSide(green, Z_AXIS);
-}
-
-function rotateRed() {
-    Cube.prototype.rotateSide(red, X_AXIS);
+Cube.prototype.startNearTurn = function () {
+    this.near_turns = 90;
 }
 
 /* Set up event callback to start the application */
-window.onload = function () {
+window.onload = function() {
     initGL(); // basic WebGL setup for the scene 
 
     // load and compile our shaders into a program object
-    var shaders = initShaders(gl, "vertex-shader", "fragment-shader");
+    var shaders = initShaders( gl, "vertex-shader", "fragment-shader" );
 
     // define custom colors
     var colors = [
@@ -276,96 +233,76 @@ window.onload = function () {
         vec4(1.0, 0.0, 0.0, 1.0)    // red - left
     ];
 
-
-    // top row of cubes (yellow)
-    var topCubes = makeSide(shaders, colors, Y_AXIS);
-    for (var i in topCubes) {
-        topCubes[i].move(1.01, Y_AXIS);
-        drawables.push(topCubes[i]);
+    var front = makeSide(shaders, colors);
+    for(i in front) {
+      front[i].move(1, Z_AXIS);
+      drawables.push(front[i]);
     }
 
-    var middleCubes = makeSide(shaders, colors, Y_AXIS);
-    for (var i in middleCubes) {
-        drawables.push(middleCubes[i]);
+    back = makeSide(shaders, colors);
+    for(i in back) {
+      back[i].move(-1, Z_AXIS);
+      drawables.push(back[i]);
     }
 
-    // white (bottom) is next in array (9-17)
-    var bottomCubes = makeSide(shaders, colors, Y_AXIS);
-    for (var i in bottomCubes) {
-        bottomCubes[i].move(-1.01, Y_AXIS);
-        drawables.push(bottomCubes[i]);
+    mid = makeSide(shaders, colors);
+    for(i in mid) {
+      drawables.push(mid[i]);
     }
+
+    //orbit();
 
     renderScene(); // begin render loop
-};
+}
 
-// a helper function that makes 9 cubes at a time along a specified axis
-function makeSide(shaders, colors, axis) {
-    var AXIS_1, AXIS_2;
+function makeSide(shaders, colors) {
+  var side = []
 
-    if (axis == X_AXIS) {
-        AXIS_1 = Y_AXIS;
-        AXIS_2 = Z_AXIS;
-    }
-    else if (axis == Y_AXIS) {
-        AXIS_1 = X_AXIS;
-        AXIS_2 = Z_AXIS;
-    }
-    else {
-        AXIS_1 = X_AXIS;
-        AXIS_2 = Y_AXIS;
-    }
-
-    var side = [];
-  
   for(var i = 0; i < 9; i++) {
     side.push(new Cube(shaders, colors));
   }
-                                  
-  side[1].move(1.01, AXIS_1);   // right-center
-  
-  side[2].move(-1.01, AXIS_1);  // left-center
-  
-  side[3].move(1.01, AXIS_2);   // top-center
-  
-  side[4].move(-1.01, AXIS_2);  // bottom-center
- 
-  side[5].move(-1.01, AXIS_2);  // bottom-left
-  side[5].move(-1.01, AXIS_1);
-  
-  side[6].move(1.01, AXIS_2);   // top-left
-  side[6].move(-1.01, AXIS_1);
-  
-  side[7].move(-1.01, AXIS_2);  // bottom-right
-  side[7].move(1.01, AXIS_1);
-  
-  side[8].move(1.01, AXIS_2);   // top-right
-  side[8].move(1.01, AXIS_1);
-  
-  return side;
-  
-} 
 
-// value on a single face (0-8) after a quarter clockwise turn
-// I don't know if this makes sense anymore...only specific to top
-function getNewIndex(index) {
-    switch (index) {
-        case 1:
-            return 4;
-        case 2:
-            return 3;
-        case 3:
-            return 1;
-        case 4:
-            return 2;
-        case 5:
-            return 6;
-        case 6:
-            return 8;
-        case 7:
-            return 5;
-        default:
-            return 7;
-    }
+  side[1].move(1.0, X_AXIS);   
+
+  side[2].move(-1.0, X_AXIS); 
+
+  side[3].move(1.0, Y_AXIS);  
+
+  side[4].move(-1.0, Y_AXIS);  
+
+  side[5].move(-1.0, Y_AXIS);  
+  side[5].move(-1.0, X_AXIS);
+
+  side[6].move(1.0, Y_AXIS);  
+  side[6].move(-1.0, X_AXIS);
+
+  side[7].move(-1.0, Y_AXIS); 
+  side[7].move(1.0, X_AXIS);
+
+  side[8].move(1.0, Y_AXIS);   
+  side[8].move(1.0, X_AXIS);
+
+  return side;
+
 }
+
+// start off by trying to orbit the cubes on green face(drawables[0-9])
+// need to think about arranging cubes to get a side mathematically...want to just work on orbit function for now...
+function orbit() {
+  var cubes1 = drawables.slice(0, 9);
+  var cubes2 = drawables.slice(9, 18);
+  var cubes3 = drawables.slice(18, 27);
+  var center = cubes1[19];  //center?
+  for(cube in cubes1) {			//front
+    cubes1[cube].startLeftTurn();
+  }
+  for(cube in cubes2) {			//back
+	cubes2[cube].startLeftTurn();
+  }
+  for(cube in cubes3) {			//middle
+	cubes3[cube].startLeftTurn();
+  }
+}
+
+
 

@@ -5,6 +5,17 @@
 var canvas; // global to hold reference to an HTML5 canvas
 var gl; // global to hold reference to our WebGL context
 
+//string positions within the drawables array
+var yellow = "17 8 6 15 21 12 26 3 24";
+var white  = "16 7 5 14 22 13 25 4 23";
+var green  = "8 7 5 6 0 3 1 4 2"
+var blue   = "17 16 14 15 9 12 10 13 11";
+var red    = "15 14 5 6 20 24 11 23 2";
+var orange = "17 16 7 8 19 26 10 25 1";
+//variables to assist each color, using above color variables
+var curCubies = "";
+var curCube = 0;
+
 // a few simple constants
 const X_AXIS = 0;
 const Y_AXIS = 1;
@@ -28,13 +39,15 @@ function initGL()
 
     // set the projection matrix
     // note: added rotation just to better see the shapes of our cubes
-    projection = ortho(-2, 2, -1.5, 1.5, -100, 100);
+    // projection = ortho(-2, 2, -1.5, 1.5, -100, 100);
 //    projection = mult(projection, rotate(30, [0.5, 1, 0.12]));
 
     projection = perspective(45, canvas.width / canvas.height, 1, 100);
     var camera = lookAt([3, 2, 6], [0, 0, 0], [0, 1, 0]);
 
     projection = mult(projection, camera);
+
+    // set up an event handler for this button
 
     // set up an event handler for projection buttons
     // Camera is set up slightly above the cube looking at a corner
@@ -53,64 +66,200 @@ function initGL()
         camera = lookAt([3, 2, 3], [0, 0, 0], [0, 1, 0]);
         projection = mult(projection, camera);
     }, false);
+	
+	/*
+	var e = document.getElementById("Btn_Orbit");
+	e.addEventListener("click",function(){
+		orbit(); 
+	}, false);
+	*/
+	
 
-    btns = [
-        document.getElementById('Btn_RED'),
-        document.getElementById('Btn_ORANGE'),
-        document.getElementById('Btn_YELLOW'),
-        document.getElementById('Btn_GREEN'),
-        document.getElementById('Btn_BLUE'),
-        document.getElementById('Btn_WHITE')
-    ];
-
-    // set up an event handler for rotating all faces
-    btns[0].addEventListener("click",
-        function () {
+	var btn_yellow = document.getElementById("Btn_TopR");      //yellow
+    btn_yellow.addEventListener("click",
+        function(){
             disableBtns();
-            rotateRed();
+			curCubies = yellow.split(" ");
+			while (curCube < curCubies.length)
+			{
+				drawables[curCubies[curCube]].startRightTurn();
+				curCube++;
+			}
+			
+			//resets cubies				
+			var temp = drawables[6];
+			drawables[6] = drawables[8];
+			drawables[8] = drawables[17];
+			drawables[17] = drawables[15];
+			drawables[15] = temp;
+			temp = drawables[3];
+			drawables[3] = drawables[26];
+			drawables[26] = drawables[12];
+			drawables[12] = drawables[24];	
+			drawables[24] = temp;
+			
+			//resets variables
+			curCube = 0;
+			curCubies = "";
+        },
+        false
+    );	
+
+	var btn_white = document.getElementById("Btn_BotR");         //white
+    btn_white.addEventListener("click",
+        function(){
+            disableBtns();
+			curCubies = white.split(" ");
+			while (curCube < curCubies.length)
+			{
+				drawables[curCubies[curCube]].startRightTurn();
+				curCube++;
+			}
+			
+			//resets cubies	
+			var temp = drawables[13];
+			drawables[13] = drawables[23];
+			drawables[23] = drawables[4];
+			drawables[4] = drawables[25];
+			drawables[25] = temp;
+			temp = drawables[16];
+			drawables[16] = drawables[14];
+			drawables[14] = drawables[5];
+			drawables[5] = drawables[7];	
+			drawables[7] = temp;
+			
+			//resets variables
+			curCube = 0;
+			curCubies = "";
         },
         false
     );
-
-    btns[1].addEventListener("click",
-        function () {
+	
+	var btn_green = document.getElementById("Btn_LeftR"); //green
+    btn_green.addEventListener("click",
+        function(){
             disableBtns();
-            rotateOrange();
-        },
+			
+			curCubies = green.split(" ");
+			while (curCube < curCubies.length)
+			{
+				drawables[curCubies[curCube]].startForwardTurn();
+				curCube++;
+			}
+			
+			//resets cubies	
+			var temp = drawables[3];
+			drawables[3] = drawables[2];
+			drawables[2] = drawables[4];
+			drawables[4] = drawables[1];
+			drawables[1] = temp;
+			temp = drawables[8];
+			drawables[8] = drawables[6];
+			drawables[6] = drawables[5];
+			drawables[5] = drawables[7];	
+			drawables[7] = temp;	
+			
+			//resets variables
+			curCube = 0;
+			curCubies = "";
+		},
         false
     );
-
-    btns[2].addEventListener("click",
-        function () {
+	
+	var btn_blue = document.getElementById("Btn_RightR"); //blue
+    btn_blue.addEventListener("click",
+        function(){
             disableBtns();
-            rotateYellow();
-        },
+			
+			curCubies = blue.split(" ");
+			while (curCube < curCubies.length)
+			{
+				drawables[curCubies[curCube]].startForwardTurn();
+				curCube++;
+			}
+
+			//resets cubies	
+			var temp = drawables[12];
+			drawables[12] = drawables[11];
+			drawables[11] = drawables[13];
+			drawables[13] = drawables[10];
+			drawables[10] = temp;
+			temp = drawables[17];
+			drawables[17] = drawables[15];
+			drawables[15] = drawables[14];
+			drawables[14] = drawables[16];	
+			drawables[16] = temp;		
+
+			//resets variables
+			curCube = 0;
+			curCubies = "";
+		},
         false
     );
-
-    btns[3].addEventListener("click",
-        function () {
+			
+	var btn_red = document.getElementById("Btn_RedR"); //red
+    btn_red.addEventListener("click",
+        function(){
             disableBtns();
-            rotateGreen();
-        },
+			
+			curCubies = red.split(" ");
+			while (curCube < curCubies.length)
+			{
+				drawables[curCubies[curCube]].startFarTurn();
+				curCube++;
+			}
+			
+			//resets cubies				
+			var temp = drawables[24];
+			drawables[24] = drawables[2];
+			drawables[2] = drawables[23];
+			drawables[23] = drawables[11];
+			drawables[11] = temp;
+			temp = drawables[15];
+			drawables[15] = drawables[6];
+			drawables[6] = drawables[5];
+			drawables[5] = drawables[14];	
+			drawables[14] = temp;
+			
+			//resets variables
+			curCube = 0;
+			curCubies = "";
+		},
         false
     );
-
-    btns[4].addEventListener("click",
-        function () {
+		
+	var btn_orange = document.getElementById("Btn_FrontR"); //orange
+    btn_orange.addEventListener("click",
+        function(){
             disableBtns();
-            rotateBlue();
-        },
+			
+			curCubies = orange.split(" ");
+			while (curCube < curCubies.length)
+			{
+				drawables[curCubies[curCube]].startNearTurn();
+				curCube++;
+			}
+
+			//resets cubies			
+			var temp = drawables[26];
+			drawables[26] = drawables[1];
+			drawables[1] = drawables[25];
+			drawables[25] = drawables[10];
+			drawables[10] = temp;
+			temp = drawables[17];
+			drawables[17] = drawables[8];
+			drawables[8] = drawables[7];
+			drawables[7] = drawables[16];	
+			drawables[16] = temp;
+			
+			//resets variables
+			curCube = 0;
+			curCubies = "";			
+		},
         false
     );
-
-    btns[5].addEventListener("click",
-        function () {
-            disableBtns();
-            rotateWhite();
-        },
-        false
-    );
+		
+	
 }
 
 /* Global render callback - would draw multiple objects if there were more than one */
@@ -123,17 +272,24 @@ var renderScene = function(){
     for (i in drawables) {
         drawables[i].draw();
     }
-
     // queue up this same callback for the next frame
     requestAnimFrame(renderScene);
 }
 
-function disableBtns() {
-    for (var i in btns)
-        btns[i].disabled = true;
+function disableBtns() { //TODO: list out all buttons
+	document.getElementById('Btn_TopR').disabled = true;
+	document.getElementById('Btn_BotR').disabled = true;
+	document.getElementById('Btn_LeftR').disabled = true;
+	document.getElementById('Btn_RightR').disabled = true;
+	document.getElementById('Btn_RedR').disabled = true;
+	document.getElementById('Btn_FrontR').disabled = true;
 }
 
 function enableBtns() {
-    for (var i in btns)
-        btns[i].disabled = false;
+	document.getElementById('Btn_TopR').disabled = false;
+	document.getElementById('Btn_BotR').disabled = false;
+	document.getElementById('Btn_LeftR').disabled = false;
+	document.getElementById('Btn_RightR').disabled = false;
+	document.getElementById('Btn_RedR').disabled = false;
+	document.getElementById('Btn_FrontR').disabled = false;
 }
