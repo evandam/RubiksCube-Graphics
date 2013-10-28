@@ -20,12 +20,24 @@ Cube.prototype.init = function(program, faceColors)
 {
     this.points = []; // this array will hold raw vertex positions
     this.colors = []; // this array will hold per-vertex color data
+    this.normalsArray = [];  // this will hold the normal vector to each vertex
     this.transform = mat4(); // initialize object transform as identity matrix
+
+    this.lightPosition = vec4(1.0, 1.0, 1.0, 0.0);
+    this.lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
+    this.lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
+    this.lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
+
+    this.materialAmbient = vec4(1.0, 0.0, 1.0, 1.0);
+    this.materialDiffuse = vec4(1.0, 0.8, 0.0, 1.0);
+    this.materialSpecular = vec4(1.0, 0.8, 0.0, 1.0);
+    this.materialShininess = 100.0;
 
     // TODO make sure we pass the face colors into this call
     this.mkcube(faceColors); // delegate to auxiliary function
 
-    this.program = program; // Load shaders and initialize attribute buffers
+    this.program = program; // Load shaders and initialize attribute buffer
+
 
     this.cBufferId = gl.createBuffer(); // reserve a buffer object
     gl.bindBuffer( gl.ARRAY_BUFFER, this.cBufferId ); // set active array buffer
@@ -37,16 +49,60 @@ Cube.prototype.init = function(program, faceColors)
     gl.bindBuffer( gl.ARRAY_BUFFER, this.vBufferId ); // set active array buffer
     /* send vert positions to the buffer, must repeat this
        wherever we change the vert positions for this cube */
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points), gl.STATIC_DRAW );
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(this.points), gl.STATIC_DRAW);
+    
 }
 
-Cube.prototype.draw = function(){
+Cube.prototype.draw = function () {
+    /* Check if the cube needs to be turned. Enable buttons on last turn. */
+    if (this.right_turns > 0) {
+        this.turn(-1, Y_AXIS);
+        this.right_turns--;
+        if (this.right_turns === 0)
+            enableBtns();
+    }
+
+    else if (this.left_turns > 0) {
+        this.turn(1, Y_AXIS);
+        this.left_turns--;
+        if (this.left_turns === 0)
+            enableBtns();
+    }
+
+    else if (this.forward_turns > 0) {
+        this.turn(-1, Z_AXIS);
+        this.forward_turns--;
+        if (this.forward_turns === 0)
+            enableBtns();
+    }
+
+    else if (this.backward_turns > 0) {
+        this.turn(1, Z_AXIS);
+        this.backward_turns--;
+        if (this.backward_turns === 0)
+            enableBtns();
+    }
+
+    else if (this.near_turns > 0) {
+        this.turn(-1, X_AXIS);
+        this.near_turns--;
+        if (this.near_turns === 0)
+            enableBtns();
+    }
+
+    else if (this.far_turns > 0) {
+        this.turn(-1, X_AXIS);
+        this.far_turns--;
+        if (this.far_turns === 0)
+            enableBtns();
+    }
+
     gl.useProgram( this.program ); // set the current shader programs
 
-    var projId = gl.getUniformLocation(this.program, "projection"); 
+    var projId = gl.getUniformLocation(this.program, "projectionMatrix"); 
     gl.uniformMatrix4fv(projId, false, flatten(projection));
 
-    var xformId = gl.getUniformLocation(this.program, "modeltransform");
+    var xformId = gl.getUniformLocation(this.program, "modelViewMatrix");
     gl.uniformMatrix4fv(xformId, false, flatten(this.transform));
 
     gl.bindBuffer( gl.ARRAY_BUFFER, this.cBufferId ); // set active array buffer
@@ -61,48 +117,31 @@ Cube.prototype.draw = function(){
     gl.vertexAttribPointer( vPosId, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosId );
 
-    /* Check if the cube needs to be turned. Enable buttons on last turn. */
-    if (this.right_turns > 0) {
-        this.turn(-1, Y_AXIS);
-        this.right_turns--;
-        if (this.right_turns === 0)
-            enableBtns();
-    }
-	
-	else if (this.left_turns > 0) {
-        this.turn(1, Y_AXIS);
-        this.left_turns--;
-        if (this.left_turns === 0)
-            enableBtns();
-    }
+    // bind variables to the shader program for lighting
+    // normals array
+    this.nBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.nBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(this.normalsArray), gl.STATIC_DRAW);
 
-	else if (this.forward_turns > 0) {
-        this.turn(-1, Z_AXIS);
-        this.forward_turns--;
-        if (this.forward_turns === 0)
-            enableBtns();
-    }
-	
-	else if (this.backward_turns > 0) {
-        this.turn(1, Z_AXIS);
-        this.backward_turns--;
-        if (this.backward_turns === 0)
-            enableBtns();
-    }
-	
-	else if (this.near_turns > 0) {
-        this.turn(-1, X_AXIS);
-        this.near_turns--;
-        if (this.near_turns === 0)
-            enableBtns();
-    }
-	
-	else if (this.far_turns > 0) {
-        this.turn(-1, X_AXIS);
-        this.far_turns--;
-        if (this.far_turns === 0)
-            enableBtns();
-    }
+    this.vNormal = gl.getAttribLocation(this.program, "vNormal");
+    gl.vertexAttribPointer(this.vNormal, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(this.vNormal);
+
+    this.ambientProduct = mult(this.lightAmbient, this.materialAmbient);
+    this.diffuseProduct = mult(this.lightDiffuse, this.materialDiffuse);
+    this.specularProduct = mult(this.lightSpecular, this.materialSpecular);
+
+    gl.uniform4fv(gl.getUniformLocation(this.program, "ambientProduct"),
+       flatten(this.ambientProduct));
+    gl.uniform4fv(gl.getUniformLocation(this.program, "diffuseProduct"),
+       flatten(this.diffuseProduct));
+    gl.uniform4fv(gl.getUniformLocation(this.program, "specularProduct"),
+       flatten(this.specularProduct));
+    gl.uniform4fv(gl.getUniformLocation(this.program, "lightPosition"),
+       flatten(this.lightPosition));
+
+    gl.uniform1f(gl.getUniformLocation(this.program,
+       "shininess"), this.materialShininess);
 
     // now push buffer data through the pipeline to render this object
     gl.drawArrays( gl.TRIANGLES, 0, this.numverts() );
@@ -144,21 +183,28 @@ Cube.prototype.vcolors = [
 */
 Cube.prototype.mkquad = function(a, b, c, d, color)
 {
+    // calculate the normal by using points on a plane
+    var t1 = subtract(this.vertices[b], this.vertices[a]);
+    var t2 = subtract(this.vertices[c], this.vertices[b]);
+    var normal = normalize(vec3(cross(t1, t2)));
+
     this.points.push( vec4(this.vertices[a]) );
 
-    this.points.push( vec4(this.vertices[b]) );
+    this.points.push(vec4(this.vertices[b]));
 
-    this.points.push( vec4(this.vertices[c]) );
+    this.points.push(vec4(this.vertices[c]));
 
-    this.points.push( vec4(this.vertices[a]) );
+    this.points.push(vec4(this.vertices[a]));
 
-    this.points.push( vec4(this.vertices[c]) );
+    this.points.push(vec4(this.vertices[c]));
 
-    this.points.push( vec4(this.vertices[d]) );
+    this.points.push(vec4(this.vertices[d]));
 
-    // push all colors at once since same now
-    for (var i = 0; i < 6; i++)
+    // push all colors and normals at once since same now
+    for (var i = 0; i < 6; i++) {
         this.colors.push(color);
+        this.normalsArray.push(normal);
+    }
 }
 
 /*
