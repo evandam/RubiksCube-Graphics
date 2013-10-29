@@ -23,9 +23,9 @@ Cube.prototype.init = function(program, faceColors)
     this.normalsArray = [];  // this will hold the normal vector to each vertex
     this.transform = mat4(); // initialize object transform as identity matrix
 
-    this.materialAmbient = vec4(0.0, 0.0, 0.0, 1.0);
-    this.materialDiffuse = vec4(0.8, 0.2, 0.2, 1.0);    // determines the color reflected
-    this.materialSpecular = vec4(0.2, 0.2, 0.2, 1.0);
+    this.materialAmbient = vec4(0.1, 0.1, 0.1, 1.0);
+    this.materialDiffuse = vec4(0.6, 0.6, 0.6, 1.0);    // determines the color reflected
+    this.materialSpecular = vec4(0.7, 0.7, 0.7, 1.0);
     this.materialShininess = 100.0;
 
     // TODO make sure we pass the face colors into this call
@@ -99,11 +99,11 @@ Cube.prototype.draw = function () {
     var xformId = gl.getUniformLocation(this.program, "modelViewMatrix");
     gl.uniformMatrix4fv(xformId, false, flatten(this.transform));
 
-    /* gl.bindBuffer( gl.ARRAY_BUFFER, this.cBufferId ); // set active array buffer
+     gl.bindBuffer( gl.ARRAY_BUFFER, this.cBufferId ); // set active array buffer
     // map buffer data to the vertex shader attribute
     var vColorId = gl.getAttribLocation( this.program, "vColor" );
     gl.vertexAttribPointer( vColorId, 4, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vColorId ); */
+    gl.enableVertexAttribArray( vColorId );
     
 
     gl.bindBuffer( gl.ARRAY_BUFFER, this.vBufferId ); // set active array buffer
@@ -114,7 +114,7 @@ Cube.prototype.draw = function () {
 
     // bind variables to the shader program for lighting
     // the color that the vertex will be
-    // this.materialDiffuse = this.vcolors[6];
+    this.materialDiffuse = this.colors[Math.floor(Math.random() * 6)];
 
     var ambientProduct = mult(lightAmbient, this.materialAmbient);
     var diffuseProduct = mult(lightDiffuse, this.materialDiffuse);
@@ -270,7 +270,7 @@ window.onload = function() {
     // define custom colors
     var colors = [
         vec4(0.0, 0.7, 0.0, 1.0),   // green - front
-        vec4(1.0, 0.5, 0.0, 1.0),   // orange - right
+        vec4(1.0, 0.2, 0.0, 1.0),   // orange - right
         vec4(1.0, 1.0, 1.0, 1.0),   // white - bottom
         vec4(1.0, 1.0, 0.0, 1.0),   // yellow - top
         vec4(0.0, 0.0, 1.0, 1.0),   // blue - back
