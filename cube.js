@@ -279,13 +279,13 @@ window.onload = function() {
 
     var front = makeSide(shaders, colors);
     for(i in front) {
-      front[i].move(1, Z_AXIS);
+      front[i].move(1.01, Z_AXIS);
       drawables.push(front[i]);
     }
 
     back = makeSide(shaders, colors);
     for(i in back) {
-      back[i].move(-1, Z_AXIS);
+      back[i].move(-1.01, Z_AXIS);
       drawables.push(back[i]);
     }
 
@@ -306,25 +306,25 @@ function makeSide(shaders, colors) {
     side.push(new Cube(shaders, colors));
   }
 
-  side[1].move(1.0, X_AXIS);   
+  side[1].move(1.01, X_AXIS);   
 
-  side[2].move(-1.0, X_AXIS); 
+  side[2].move(-1.01, X_AXIS); 
 
-  side[3].move(1.0, Y_AXIS);  
+  side[3].move(1.01, Y_AXIS);  
 
-  side[4].move(-1.0, Y_AXIS);  
+  side[4].move(-1.01, Y_AXIS);  
 
-  side[5].move(-1.0, Y_AXIS);  
-  side[5].move(-1.0, X_AXIS);
+  side[5].move(-1.01, Y_AXIS);  
+  side[5].move(-1.01, X_AXIS);
 
-  side[6].move(1.0, Y_AXIS);  
-  side[6].move(-1.0, X_AXIS);
+  side[6].move(1.01, Y_AXIS);  
+  side[6].move(-1.01, X_AXIS);
 
-  side[7].move(-1.0, Y_AXIS); 
-  side[7].move(1.0, X_AXIS);
+  side[7].move(-1.01, Y_AXIS); 
+  side[7].move(1.01, X_AXIS);
 
-  side[8].move(1.0, Y_AXIS);   
-  side[8].move(1.0, X_AXIS);
+  side[8].move(1.01, Y_AXIS);   
+  side[8].move(1.01, X_AXIS);
 
   return side;
 
