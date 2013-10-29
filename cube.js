@@ -23,21 +23,15 @@ Cube.prototype.init = function(program, faceColors)
     this.normalsArray = [];  // this will hold the normal vector to each vertex
     this.transform = mat4(); // initialize object transform as identity matrix
 
-    this.lightPosition = vec4(1.0, 1.0, 1.0, 0.0);
-    this.lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
-    this.lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
-    this.lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
-
-    this.materialAmbient = vec4(1.0, 0.0, 1.0, 1.0);
-    this.materialDiffuse = vec4(1.0, 0.8, 0.0, 1.0);
-    this.materialSpecular = vec4(1.0, 0.8, 0.0, 1.0);
+    this.materialAmbient = vec4(0.0, 0.0, 0.0, 1.0);
+    this.materialDiffuse = vec4(0.8, 0.2, 0.2, 1.0);    // determines the color reflected
+    this.materialSpecular = vec4(0.2, 0.2, 0.2, 1.0);
     this.materialShininess = 100.0;
 
     // TODO make sure we pass the face colors into this call
     this.mkcube(faceColors); // delegate to auxiliary function
 
     this.program = program; // Load shaders and initialize attribute buffer
-
 
     this.cBufferId = gl.createBuffer(); // reserve a buffer object
     gl.bindBuffer( gl.ARRAY_BUFFER, this.cBufferId ); // set active array buffer
@@ -105,11 +99,12 @@ Cube.prototype.draw = function () {
     var xformId = gl.getUniformLocation(this.program, "modelViewMatrix");
     gl.uniformMatrix4fv(xformId, false, flatten(this.transform));
 
-    gl.bindBuffer( gl.ARRAY_BUFFER, this.cBufferId ); // set active array buffer
+    /* gl.bindBuffer( gl.ARRAY_BUFFER, this.cBufferId ); // set active array buffer
     // map buffer data to the vertex shader attribute
     var vColorId = gl.getAttribLocation( this.program, "vColor" );
     gl.vertexAttribPointer( vColorId, 4, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vColorId );
+    gl.enableVertexAttribArray( vColorId ); */
+    
 
     gl.bindBuffer( gl.ARRAY_BUFFER, this.vBufferId ); // set active array buffer
     // map buffer data to the vertex shader attribute
@@ -118,6 +113,13 @@ Cube.prototype.draw = function () {
     gl.enableVertexAttribArray( vPosId );
 
     // bind variables to the shader program for lighting
+    // the color that the vertex will be
+    // this.materialDiffuse = this.vcolors[6];
+
+    var ambientProduct = mult(lightAmbient, this.materialAmbient);
+    var diffuseProduct = mult(lightDiffuse, this.materialDiffuse);
+    var specularProduct = mult(lightSpecular, this.materialSpecular);
+
     // normals array
     this.nBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.nBuffer);
@@ -127,18 +129,14 @@ Cube.prototype.draw = function () {
     gl.vertexAttribPointer(this.vNormal, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(this.vNormal);
 
-    this.ambientProduct = mult(this.lightAmbient, this.materialAmbient);
-    this.diffuseProduct = mult(this.lightDiffuse, this.materialDiffuse);
-    this.specularProduct = mult(this.lightSpecular, this.materialSpecular);
-
     gl.uniform4fv(gl.getUniformLocation(this.program, "ambientProduct"),
-       flatten(this.ambientProduct));
+       flatten(ambientProduct));
     gl.uniform4fv(gl.getUniformLocation(this.program, "diffuseProduct"),
-       flatten(this.diffuseProduct));
+       flatten(diffuseProduct));
     gl.uniform4fv(gl.getUniformLocation(this.program, "specularProduct"),
-       flatten(this.specularProduct));
+       flatten(specularProduct));
     gl.uniform4fv(gl.getUniformLocation(this.program, "lightPosition"),
-       flatten(this.lightPosition));
+       flatten(lightPosition));
 
     gl.uniform1f(gl.getUniformLocation(this.program,
        "shininess"), this.materialShininess);

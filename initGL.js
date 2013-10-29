@@ -23,6 +23,12 @@ const Z_AXIS = 2;
 
 var drawables = []; // used to store any objects that need to be drawn
 
+// lighting variables
+var lightPosition = vec4(1.0, 1.0, 1.0, 0.0);
+var lightAmbient = vec4(0.1, 0.1, 0.1, 1.0);
+var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
+var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
+
 /* Initialize global WebGL stuff - not object specific */
 function initGL()
 {
