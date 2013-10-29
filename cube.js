@@ -17,8 +17,7 @@ var isTurning = false;  // we should only be performing one rotation at a time
 
 /* Initialize properties of this color cube object. 
  */
-Cube.prototype.init = function(program, faceColors)
-{
+Cube.prototype.init = function (program, faceColors) {
     this.points = []; // this array will hold raw vertex positions
     this.colors = []; // this array will hold per-vertex color data
     this.normalsArray = [];  // this will hold the normal vector to each vertex
@@ -35,18 +34,18 @@ Cube.prototype.init = function(program, faceColors)
     this.program = program; // Load shaders and initialize attribute buffer
 
     this.cBufferId = gl.createBuffer(); // reserve a buffer object
-    gl.bindBuffer( gl.ARRAY_BUFFER, this.cBufferId ); // set active array buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.cBufferId); // set active array buffer
     /* send vert colors to the buffer, must repeat this
        wherever we change the vert colors for this cube */
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.colors), gl.STATIC_DRAW );
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(this.colors), gl.STATIC_DRAW);
 
     this.vBufferId = gl.createBuffer(); // reserve a buffer object
-    gl.bindBuffer( gl.ARRAY_BUFFER, this.vBufferId ); // set active array buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.vBufferId); // set active array buffer
     /* send vert positions to the buffer, must repeat this
        wherever we change the vert positions for this cube */
     gl.bufferData(gl.ARRAY_BUFFER, flatten(this.points), gl.STATIC_DRAW);
-    
-}
+
+};
 
 Cube.prototype.draw = function () {
     /* Check if the cube needs to be turned. Enable buttons on last turn. */
@@ -104,26 +103,26 @@ Cube.prototype.draw = function () {
         }
     }
 
-    gl.useProgram( this.program ); // set the current shader programs
+    gl.useProgram(this.program); // set the current shader programs
 
-    var projId = gl.getUniformLocation(this.program, "projectionMatrix"); 
+    var projId = gl.getUniformLocation(this.program, "projectionMatrix");
     gl.uniformMatrix4fv(projId, false, flatten(projection));
 
     var xformId = gl.getUniformLocation(this.program, "modelViewMatrix");
     gl.uniformMatrix4fv(xformId, false, flatten(this.transform));
 
-     gl.bindBuffer( gl.ARRAY_BUFFER, this.cBufferId ); // set active array buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.cBufferId); // set active array buffer
     // map buffer data to the vertex shader attribute
-    var vColorId = gl.getAttribLocation( this.program, "vColor" );
-    gl.vertexAttribPointer( vColorId, 4, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vColorId );
-    
+    var vColorId = gl.getAttribLocation(this.program, "vColor");
+    gl.vertexAttribPointer(vColorId, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vColorId);
 
-    gl.bindBuffer( gl.ARRAY_BUFFER, this.vBufferId ); // set active array buffer
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.vBufferId); // set active array buffer
     // map buffer data to the vertex shader attribute
-    var vPosId = gl.getAttribLocation( this.program, "vPosition" );
-    gl.vertexAttribPointer( vPosId, 4, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vPosId );
+    var vPosId = gl.getAttribLocation(this.program, "vPosition");
+    gl.vertexAttribPointer(vPosId, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vPosId);
 
     // bind variables to the shader program for lighting
     // the color that the vertex will be
@@ -155,8 +154,8 @@ Cube.prototype.draw = function () {
        "shininess"), this.materialShininess);
 
     // now push buffer data through the pipeline to render this object
-    gl.drawArrays( gl.TRIANGLES, 0, this.numverts() );
-}
+    gl.drawArrays(gl.TRIANGLES, 0, this.numverts());
+};
 
 /* Returns the total count of vertices to be sent into the pipeline. */
 Cube.prototype.numverts = function() {return this.points.length;};
@@ -192,14 +191,13 @@ Cube.prototype.vcolors = [
     TODO change this so that we specify a single color (via a
         parameter) for the quad face instead of using vcolors
 */
-Cube.prototype.mkquad = function(a, b, c, d, color)
-{
+Cube.prototype.mkquad = function (a, b, c, d, color) {
     // calculate the normal by using points on a plane
     var t1 = subtract(this.vertices[b], this.vertices[a]);
     var t2 = subtract(this.vertices[c], this.vertices[b]);
     var normal = normalize(vec3(cross(t1, t2)));
 
-    this.points.push( vec4(this.vertices[a]) );
+    this.points.push(vec4(this.vertices[a]));
 
     this.points.push(vec4(this.vertices[b]));
 
@@ -216,32 +214,46 @@ Cube.prototype.mkquad = function(a, b, c, d, color)
         this.colors.push(color);
         this.normalsArray.push(normal);
     }
-}
+
+    // DRAW BORDERS HERE TOO
+    var black = vec4(0.0, 0.0, 0.0, 1.0);
+    /*this.points.push(vec4(this.vertices[a]));
+    this.colors.push(black);
+    this.points.push(vec4(this.vertices[b]));
+    this.colors.push(black);
+    this.points.push(vec4(this.vertices[c]));
+    this.colors.push(black);
+    this.points.push(vec4(this.vertices[a]));
+    this.colors.push(black);
+    this.points.push(vec4(this.vertices[c]));
+    this.colors.push(black);
+    this.points.push(vec4(this.vertices[d]));
+    this.colors.push(black);*/
+};
 
 /*
     Build all faces of this cube object.
     TODO change this so that we specify the colors (via parameter)
         for the different faces and pass them into mkquad 
 */
-Cube.prototype.mkcube = function(colors)
-{
-    this.mkquad( 1, 0, 3, 2, colors[0] );
-    this.mkquad( 2, 3, 7, 6, colors[1] );
-    this.mkquad( 3, 0, 4, 7, colors[2] );
-    this.mkquad( 6, 5, 1, 2, colors[3] );
-    this.mkquad( 4, 5, 6, 7, colors[4] );
-    this.mkquad( 5, 4, 0, 1, colors[5] );
-}
+Cube.prototype.mkcube = function (colors) {
+    this.mkquad(1, 0, 3, 2, colors[0]);
+    this.mkquad(2, 3, 7, 6, colors[1]);
+    this.mkquad(3, 0, 4, 7, colors[2]);
+    this.mkquad(6, 5, 1, 2, colors[3]);
+    this.mkquad(4, 5, 6, 7, colors[4]);
+    this.mkquad(5, 4, 0, 1, colors[5]);
+};
 
 /* Translate this cube along the specified canonical axis. */
-Cube.prototype.move = function(dist, axis){
+Cube.prototype.move = function (dist, axis) {
     var delta = [0, 0, 0];
 
     if (axis === undefined) axis = Y_AXIS;
     delta[axis] = dist;
     // flipped order of multiplication
     this.transform = mult(translate(delta), this.transform);
-}
+};
 
 /* Rotate this cube around the center of the rubiks cube. */
 Cube.prototype.turn = function (angle, axis) {
@@ -251,7 +263,7 @@ Cube.prototype.turn = function (angle, axis) {
     avec[axis] = 1;
 
     this.transform = mult(rotate(angle, avec), this.transform);
-}
+};
 
 /* Rotate this cube around the specified canonical axis. */
 Cube.prototype.turnSingle = function (angle, axis) {
@@ -259,40 +271,114 @@ Cube.prototype.turnSingle = function (angle, axis) {
     if (axis === undefined) axis = Y_AXIS;
     avec[axis] = 1;
     this.transform = mult(this.transform, rotate(angle, avec));
-}
+};
 
 /* Init the member var so it will be read in the draw function */
 Cube.prototype.startLeftTurn = function () {
     this.left_turns = 90;
     isTurning = true;
-}
+};
 Cube.prototype.startRightTurn = function () {
     this.right_turns = 90;
     isTurning = true;
-}
+};
 Cube.prototype.startForwardTurn = function () {
     this.forward_turns = 90;
     isTurning = true;
-}
+};
 Cube.prototype.startBackwardTurn = function () {
     this.backward_turns = 90;
     isTurning = true;
-}
+};
 Cube.prototype.startFarTurn = function () {
     this.far_turns = 90;
     isTurning = true;
-}
+};
 Cube.prototype.startNearTurn = function () {
     this.near_turns = 90;
     isTurning = true;
+};
+
+function setColors(currentSide) {
+
+    for (var cur = 0; cur < currentSide.length; cur++) {
+        switch (currentSide[cur]) {
+            case 'R':
+                console.log("RED");
+                colors = [
+					vec4(1.0, 0.0, 0.0, 1.0),// red - front
+					vec4(0.0, 0.7, 0.0, 1.0),//green - right
+					vec4(1.0, 1.0, 1.0, 1.0),// white -bottom
+					vec4(1.0, 1.0, 0.0, 1.0),//yellow - top
+					vec4(1.0, 0.2, 0.0, 1.0),//orange - back
+					vec4(0.0, 0.0, 1.0, 1.0)// blue - left
+                ];
+                break;
+            case 'O':
+                console.log("ORANGE");
+                colors = [
+					vec4(1.0, 0.2, 0.0, 1.0), // orange - front
+					vec4(0.0, 0.0, 1.0, 1.0), // blue - right
+					vec4(1.0, 1.0, 1.0, 1.0), // white - bottom
+					vec4(1.0, 1.0, 0.0, 1.0), // yellow - top
+					vec4(1.0, 0.0, 0.0, 1.0), // red - back 
+					vec4(0.0, 0.7, 0.0, 1.0)  // green - left
+                ];
+                break;
+            case 'Y':
+                console.log("YELLOW");
+                colors = [
+					vec4(1.0, 1.0, 0.0, 1.0), // yellow - front
+					vec4(1.0, 0.2, 0.0, 1.0), // orange - right
+					vec4(0.0, 0.7, 0.0, 1.0), // green - bottom
+					vec4(0.0, 0.0, 1.0, 1.0), // blue - top
+					vec4(1.0, 1.0, 1.0, 1.0), // white - back
+					vec4(1.0, 0.0, 0.0, 1.0)  // red - left
+                ];
+                break;
+            case 'G':
+                console.log("GREEN");
+                colors = [
+					vec4(0.0, 0.7, 0.0, 1.0),   // green - front
+					vec4(1.0, 0.2, 0.0, 1.0),   // orange - right
+					vec4(1.0, 1.0, 1.0, 1.0),   // white - bottom
+					vec4(1.0, 1.0, 0.0, 1.0),   // yellow - top
+					vec4(0.0, 0.0, 1.0, 1.0),   // blue - back
+					vec4(1.0, 0.0, 0.0, 1.0)    // red - left
+                ];
+                break;
+            case 'B':
+                console.log("BLUE");
+                colors = [
+					vec4(0.0, 0.0, 1.0, 1.0), // blue - front
+					vec4(1.0, 0.0, 0.0, 1.0), // red - right
+					vec4(1.0, 1.0, 1.0, 1.0), // white - bottom
+					vec4(1.0, 1.0, 0.0, 1.0), // yellow - top
+					vec4(0.0, 0.7, 0.0, 1.0), // green - back
+					vec4(1.0, 0.2, 0.0, 1.0)  // orange - left
+                ];
+                break;
+            case 'W':
+                console.log("WHITE");
+                colors = [
+					vec4(1.0, 1.0, 1.0, 1.0), // white - front
+					vec4(1.0, 0.2, 0.0, 1.0), // orange - right
+					vec4(0.0, 0.0, 1.0, 1.0), // blue - bottom
+					vec4(0.0, 0.7, 0.0, 1.0), // green - top
+					vec4(1.0, 1.0, 0.0, 1.0), // yellow - back 
+					vec4(1.0, 0.0, 0.0, 1.0)  // red - left
+                ];
+                break;
+        }
+    }
 }
 
 /* Set up event callback to start the application */
-window.onload = function() {
+window.onload = function () {
     initGL(); // basic WebGL setup for the scene 
 
     // load and compile our shaders into a program object
-    var shaders = initShaders( gl, "vertex-shader", "fragment-shader" );
+    var shaders = initShaders(gl, "vertex-shader", "fragment-shader");
 
     // define custom colors
     var colors = [
@@ -305,26 +391,26 @@ window.onload = function() {
     ];
 
     var front = makeSide(shaders, colors);
-    for(i in front) {
-      front[i].move(1.01, Z_AXIS);
-      drawables.push(front[i]);
+    for (i in front) {
+        front[i].move(1.01, Z_AXIS);
+        drawables.push(front[i]);
     }
 
     back = makeSide(shaders, colors);
-    for(i in back) {
-      back[i].move(-1.01, Z_AXIS);
-      drawables.push(back[i]);
+    for (i in back) {
+        back[i].move(-1.01, Z_AXIS);
+        drawables.push(back[i]);
     }
 
     mid = makeSide(shaders, colors);
-    for(i in mid) {
-      drawables.push(mid[i]);
+    for (i in mid) {
+        drawables.push(mid[i]);
     }
 
     //orbit();
 
     renderScene(); // begin render loop
-}
+};
 
 function makeSide(shaders, colors) {
   var side = []

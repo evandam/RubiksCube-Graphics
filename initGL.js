@@ -6,6 +6,7 @@ var canvas; // global to hold reference to an HTML5 canvas
 var gl; // global to hold reference to our WebGL context
 
 //string positions within the drawables array
+// todo: switch this to arrays rather than splitting strings?
 var yellow = "17 8 6 15 21 12 26 3 24";
 var white  = "16 7 5 14 22 13 25 4 23";
 var green  = "8 7 5 6 0 3 1 4 2"

@@ -1,6 +1,14 @@
 ﻿// read in a file via HTML5's File API
 // parse out the cube state, initialize a cube and solve it
 var lines;
+var string = [];
+var r_side = [];
+var o_side = [];
+var y_side = [];
+var g_side = [];
+var b_side = [];
+var w_side = [];
+
 document.getElementById('stateFileInput').addEventListener('change', function (evt) {
     var f = evt.target.files[0];
     var reader = new FileReader();
@@ -8,30 +16,96 @@ document.getElementById('stateFileInput').addEventListener('change', function (e
         return function (e) {
             
             lines = e.target.result.split('\n');
+			
             // break down string into array of array (of chars)
             for (var line in lines)
-                lines[line] = lines[line].trim().split('');
-
-            var r_side = lines.slice(0, 3);
-
-            var g_side = [];
-            var y_side = [];
-            var b_side = [];
-            for (var i = 3; i < 6; i++) {
-                g_side.push(lines[i].slice(0, 3));
-                y_side.push(lines[i].slice(3, 6));
-                b_side.push(lines[i].slice(6, 9));
-            }
-            
-            var o_side = lines.slice(6, 9);
-            var w_side = lines.slice(9);
-
-
-
-        }
+			{
+				string = string.concat(lines[line].toString().trim().split(''));
+			}	
+			console.log(string);
+			
+            var firstSide = string.slice(0,9);
+			
+			var secondSide = string.slice(9,12);
+			secondSide = secondSide.concat(string.slice(18,21));
+			secondSide = secondSide.concat(string.slice(27,30));
+			
+			var thirdSide = string.slice(12,15);
+			thirdSide = thirdSide.concat(string.slice(21,24));
+			thirdSide = thirdSide.concat(string.slice(30,33));
+			
+			var fourthSide = string.slice(15,18);
+			fourthSide = fourthSide.concat(string.slice(24,27));
+			fourthSide = fourthSide.concat(string.slice(33,36));
+			
+			var fifthSide = string.slice(36,45);
+			
+			var sixthSide = string.slice(45,54);
+			
+			assignSide(firstSide);
+			assignSide(secondSide);
+			assignSide(thirdSide);
+			assignSide(fourthSide);
+			assignSide(fifthSide);
+			assignSide(sixthSide);
+			
+    }
     })(f);
     reader.readAsText(f);
 });
+
+function assignSide(currentSide)
+{
+	var center = 4;
+	
+	switch (currentSide[center]) {
+		case 'R':
+			console.log("RED SIDE");
+			r_side = currentSide;
+			var cubie = setColors(currentSide);
+			//makeCube(cubie);
+			console.log("Cubie " +cubie);
+			console.log(r_side);
+			break;
+		case 'O':
+			console.log("ORANGE SIDE");
+			o_side = currentSide;
+			var cubie = setColors(currentSide);
+			//makeCube(cubie);
+			console.log(o_side);
+			break;
+		case 'Y':
+			console.log("YELLOW SIDE");
+			y_side = currentSide;
+			var cubie = setColors(currentSide);
+			//makeCube(cubie);
+			console.log(y_side);
+			break;
+		case 'G':
+			console.log("GREEN SIDE");
+			g_side = currentSide;
+			var cubie = setColors(currentSide);
+			console.log("Cubie " +cubie);
+			//makeCube(cubie);
+			console.log(g_side);
+			break;
+		case 'B':
+			console.log("BLUE SIDE");
+			b_side = currentSide;
+			var cubie = setColors(currentSide);
+			//makeCube(cubie);
+			console.log(b_side);
+			break;
+		case 'W':
+			console.log("WHITE SIDE");
+			w_side = currentSide;
+			var cubie = setColors(currentSide);
+			//makeCube(cubie);
+			console.log(w_side);
+			break;
+	}
+
+}
 
 document.getElementById('solutionFileInput').addEventListener('change', function (evt) {
     var f = evt.target.files[0];
