@@ -13,6 +13,7 @@
         and we probably should pass these through to init()
  */
 var Cube = function (program, faceColors) { this.init(program, faceColors); }
+var isTurning = false;  // we should only be performing one rotation at a time
 
 /* Initialize properties of this color cube object. 
  */
@@ -52,43 +53,55 @@ Cube.prototype.draw = function () {
     if (this.right_turns > 0) {
         this.turn(-1, Y_AXIS);
         this.right_turns--;
-        if (this.right_turns === 0)
+        if (this.right_turns === 0) {
             enableBtns();
+            isTurning = false;
+        }
     }
 
     else if (this.left_turns > 0) {
         this.turn(1, Y_AXIS);
         this.left_turns--;
-        if (this.left_turns === 0)
+        if (this.left_turns === 0) {
             enableBtns();
+            isTurning = false;
+        }
     }
 
     else if (this.forward_turns > 0) {
         this.turn(-1, Z_AXIS);
         this.forward_turns--;
-        if (this.forward_turns === 0)
+        if (this.forward_turns === 0) {
             enableBtns();
+            isTurning = false;
+        }
     }
 
     else if (this.backward_turns > 0) {
         this.turn(1, Z_AXIS);
         this.backward_turns--;
-        if (this.backward_turns === 0)
+        if (this.backward_turns === 0) {
             enableBtns();
+            isTurning = false;
+        }
     }
 
     else if (this.near_turns > 0) {
         this.turn(-1, X_AXIS);
         this.near_turns--;
-        if (this.near_turns === 0)
+        if (this.near_turns === 0) {
             enableBtns();
+            isTurning = false;
+        }
     }
 
     else if (this.far_turns > 0) {
         this.turn(-1, X_AXIS);
         this.far_turns--;
-        if (this.far_turns === 0)
+        if (this.far_turns === 0) {
             enableBtns();
+            isTurning = false;
+        }
     }
 
     gl.useProgram( this.program ); // set the current shader programs
@@ -251,21 +264,27 @@ Cube.prototype.turnSingle = function (angle, axis) {
 /* Init the member var so it will be read in the draw function */
 Cube.prototype.startLeftTurn = function () {
     this.left_turns = 90;
+    isTurning = true;
 }
 Cube.prototype.startRightTurn = function () {
     this.right_turns = 90;
+    isTurning = true;
 }
 Cube.prototype.startForwardTurn = function () {
     this.forward_turns = 90;
+    isTurning = true;
 }
 Cube.prototype.startBackwardTurn = function () {
     this.backward_turns = 90;
+    isTurning = true;
 }
 Cube.prototype.startFarTurn = function () {
     this.far_turns = 90;
+    isTurning = true;
 }
 Cube.prototype.startNearTurn = function () {
     this.near_turns = 90;
+    isTurning = true;
 }
 
 /* Set up event callback to start the application */
@@ -499,6 +518,3 @@ function rotateOrange() {
     curCube = 0;
     curCubies = "";
 }
-
-
-

@@ -39,6 +39,9 @@ document.getElementById('solutionFileInput').addEventListener('change', function
     reader.onload = (function () {
         return function (e) {
             var solution = e.target.result.split('');
+            // queue of rotations to make
+            var turns = [];
+
             // the first value is the color of the face to rotate,
             // the second is the number of times to turn it.
             for (var i = 0; i < solution.length; i += 2) {
@@ -47,26 +50,36 @@ document.getElementById('solutionFileInput').addEventListener('change', function
                 for (var j = 1; j <= num_turns; j++) {
                     switch (face) {
                         case 'R':
-                            rotateRed();
+                            turns.push(rotateRed);
                             break;
                         case 'O':
-                            rotateOrange();
+                            turns.push(rotateOrange);
                             break;
                         case 'Y':
-                            rotateYellow();
+                            turns.push(rotateYellow);
                             break;
                         case 'G':
-                            rotateGreen();
+                            turns.push(rotateGreen);
                             break;
                         case 'B':
-                            rotateBlue();
+                            turns.push(rotateBlue);
                             break;
                         case 'W':
-                            rotateWhite();
+                            turns.push(rotateWhite);
                             break;
                     }
                 }
             }
+            
+            var interval = setInterval(function () {
+                if (turns.length > 0) {
+                    if (!isTurning)
+                        turns.shift()();
+                }
+                else
+                    clearInterval(interval);
+            }, 100);
+
         }
     })(f);
     reader.readAsText(f);
