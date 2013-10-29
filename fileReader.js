@@ -14,96 +14,86 @@ document.getElementById('stateFileInput').addEventListener('change', function (e
     var reader = new FileReader();
     reader.onload = (function () {
         return function (e) {
-            
+
             lines = e.target.result.split('\n');
-			
+
             // break down string into array of array (of chars)
-            for (var line in lines)
-			{
-				string = string.concat(lines[line].toString().trim().split(''));
-			}	
-			console.log(string);
-			
-            var firstSide = string.slice(0,9);
-			
-			var secondSide = string.slice(9,12);
-			secondSide = secondSide.concat(string.slice(18,21));
-			secondSide = secondSide.concat(string.slice(27,30));
-			
-			var thirdSide = string.slice(12,15);
-			thirdSide = thirdSide.concat(string.slice(21,24));
-			thirdSide = thirdSide.concat(string.slice(30,33));
-			
-			var fourthSide = string.slice(15,18);
-			fourthSide = fourthSide.concat(string.slice(24,27));
-			fourthSide = fourthSide.concat(string.slice(33,36));
-			
-			var fifthSide = string.slice(36,45);
-			
-			var sixthSide = string.slice(45,54);
-			
-			assignSide(firstSide);
-			assignSide(secondSide);
-			assignSide(thirdSide);
-			assignSide(fourthSide);
-			assignSide(fifthSide);
-			assignSide(sixthSide);
-			
-    }
+            for (var line in lines) {
+                string = string.concat(lines[line].toString().trim().split(''));
+            }
+            console.log(string);
+
+            var firstSide = string.slice(0, 9);
+
+            var secondSide = string.slice(9, 12);
+            secondSide = secondSide.concat(string.slice(18, 21));
+            secondSide = secondSide.concat(string.slice(27, 30));
+
+            var thirdSide = string.slice(12, 15);
+            thirdSide = thirdSide.concat(string.slice(21, 24));
+            thirdSide = thirdSide.concat(string.slice(30, 33));
+
+            var fourthSide = string.slice(15, 18);
+            fourthSide = fourthSide.concat(string.slice(24, 27));
+            fourthSide = fourthSide.concat(string.slice(33, 36));
+
+            var fifthSide = string.slice(36, 45);
+
+            var sixthSide = string.slice(45, 54);
+
+            assignSide(firstSide);
+            assignSide(secondSide);
+            assignSide(thirdSide);
+            assignSide(fourthSide);
+            assignSide(fifthSide);
+            assignSide(sixthSide);
+
+        }
     })(f);
     reader.readAsText(f);
 });
 
-function assignSide(currentSide)
-{
-	var center = 4;
-	
-	switch (currentSide[center]) {
-		case 'R':
-			console.log("RED SIDE");
-			r_side = currentSide;
-			var cubie = setColors(currentSide);
-			//makeCube(cubie);
-			console.log("Cubie " +cubie);
-			console.log(r_side);
-			break;
-		case 'O':
-			console.log("ORANGE SIDE");
-			o_side = currentSide;
-			var cubie = setColors(currentSide);
-			//makeCube(cubie);
-			console.log(o_side);
-			break;
-		case 'Y':
-			console.log("YELLOW SIDE");
-			y_side = currentSide;
-			var cubie = setColors(currentSide);
-			//makeCube(cubie);
-			console.log(y_side);
-			break;
-		case 'G':
-			console.log("GREEN SIDE");
-			g_side = currentSide;
-			var cubie = setColors(currentSide);
-			console.log("Cubie " +cubie);
-			//makeCube(cubie);
-			console.log(g_side);
-			break;
-		case 'B':
-			console.log("BLUE SIDE");
-			b_side = currentSide;
-			var cubie = setColors(currentSide);
-			//makeCube(cubie);
-			console.log(b_side);
-			break;
-		case 'W':
-			console.log("WHITE SIDE");
-			w_side = currentSide;
-			var cubie = setColors(currentSide);
-			//makeCube(cubie);
-			console.log(w_side);
-			break;
-	}
+function assignSide(currentSide) {
+    var center = 4;
+
+    switch (currentSide[center]) {
+        case 'R':
+            console.log("RED SIDE");
+            r_side = currentSide;
+            makeCubes(setColors(currentSide));
+            console.log(r_side);
+            break;
+        case 'O':
+            console.log("ORANGE SIDE");
+            o_side = currentSide;
+            makeCubes(setColors(currentSide));
+            console.log(o_side);
+            break;
+        case 'Y':
+            console.log("YELLOW SIDE");
+            y_side = currentSide;
+            makeCubes(setColors(currentSide));
+            console.log(y_side);
+            break;
+        case 'G':
+            console.log("GREEN SIDE");
+            g_side = currentSide;
+            makeCubes(setColors(currentSide));
+            console.log(g_side);
+            break;
+        case 'B':
+            console.log("BLUE SIDE");
+            b_side = currentSide;
+            makeCubes(setColors(currentSide));
+            console.log(b_side);
+            break;
+        case 'W':
+            console.log("WHITE SIDE");
+            w_side = currentSide;
+            makeCubes(setColors(currentSide));
+            console.log(w_side);
+            break;
+    }
 
 }
 
@@ -144,7 +134,7 @@ document.getElementById('solutionFileInput').addEventListener('change', function
                     }
                 }
             }
-            
+
             var interval = setInterval(function () {
                 if (turns.length > 0) {
                     if (!isTurning)

@@ -158,30 +158,30 @@ Cube.prototype.draw = function () {
 };
 
 /* Returns the total count of vertices to be sent into the pipeline. */
-Cube.prototype.numverts = function() {return this.points.length;};
+Cube.prototype.numverts = function () { return this.points.length; };
 
 /* Default vertex positions for unit cube centered at the origin. */
 Cube.prototype.vertices = [
-    [ -0.5, -0.5,  0.5, 1.0 ],
-    [ -0.5,  0.5,  0.5, 1.0 ],
-    [  0.5,  0.5,  0.5, 1.0 ],
-    [  0.5, -0.5,  0.5, 1.0 ],
-    [ -0.5, -0.5, -0.5, 1.0 ],
-    [ -0.5,  0.5, -0.5, 1.0 ],
-    [  0.5,  0.5, -0.5, 1.0 ],
-    [  0.5, -0.5, -0.5, 1.0 ]
+    [-0.5, -0.5, 0.5, 1.0],
+    [-0.5, 0.5, 0.5, 1.0],
+    [0.5, 0.5, 0.5, 1.0],
+    [0.5, -0.5, 0.5, 1.0],
+    [-0.5, -0.5, -0.5, 1.0],
+    [-0.5, 0.5, -0.5, 1.0],
+    [0.5, 0.5, -0.5, 1.0],
+    [0.5, -0.5, -0.5, 1.0]
 ];
 
 /* Default vertex colors for the color cube. */
 Cube.prototype.vcolors = [
-    [ 0.0, 0.0, 0.0, 1.0 ], // black
-    [ 1.0, 0.0, 0.0, 1.0 ], // red
-    [ 1.0, 1.0, 0.0, 1.0 ], // yellow
-    [ 0.0, 1.0, 0.0, 1.0 ], // green
-    [ 0.0, 0.0, 1.0, 1.0 ], // blue
-    [ 1.0, 0.0, 1.0, 1.0 ], // magenta
-    [ 1.0, 1.0, 1.0, 1.0 ], // white
-    [0.0, 1.0, 1.0, 1.0]  // cyan
+    [0.0, 0.0, 0.0, 1.0], // black
+    [1.0, 0.0, 0.0, 1.0], // red
+    [1.0, 1.0, 0.0, 1.0], // yellow
+    [0.0, 1.0, 0.0, 1.0], // green
+    [0.0, 0.0, 1.0, 1.0], // blue
+    [1.0, 0.0, 1.0, 1.0], // magenta
+    [1.0, 1.0, 1.0, 1.0], // white
+    [0.0, 1.0, 1.0, 1.0],  // cyan
     [1.0, 1.0, 1.0, 1.0]    // orange
 ];
 
@@ -301,6 +301,7 @@ Cube.prototype.startNearTurn = function () {
 
 function setColors(currentSide) {
 
+    var colors;
     for (var cur = 0; cur < currentSide.length; cur++) {
         switch (currentSide[cur]) {
             case 'R':
@@ -346,6 +347,7 @@ function setColors(currentSide) {
 					vec4(0.0, 0.0, 1.0, 1.0),   // blue - back
 					vec4(1.0, 0.0, 0.0, 1.0)    // red - left
                 ];
+                console.log(colors[0]);
                 break;
             case 'B':
                 console.log("BLUE");
@@ -371,94 +373,94 @@ function setColors(currentSide) {
                 break;
         }
     }
+    return colors;
 }
 
 /* Set up event callback to start the application */
 window.onload = function () {
     initGL(); // basic WebGL setup for the scene 
 
+    makeCubes();
+
+    renderScene(); // begin render loop
+};
+
+function makeCubes() {
+    drawables = [];
     // load and compile our shaders into a program object
     var shaders = initShaders(gl, "vertex-shader", "fragment-shader");
 
     // define custom colors
-    var colors = [
-        vec4(0.0, 0.7, 0.0, 1.0),   // green - front
-        vec4(1.0, 0.2, 0.0, 1.0),   // orange - right
-        vec4(1.0, 1.0, 1.0, 1.0),   // white - bottom
-        vec4(1.0, 1.0, 0.0, 1.0),   // yellow - top
-        vec4(0.0, 0.0, 1.0, 1.0),   // blue - back
-        vec4(1.0, 0.0, 0.0, 1.0)    // red - left
-    ];
+    var colors = setColors('G');
 
     var front = makeSide(shaders, colors);
-    for (i in front) {
+    for (var i in front) {
         front[i].move(1.01, Z_AXIS);
         drawables.push(front[i]);
     }
 
     back = makeSide(shaders, colors);
-    for (i in back) {
+    for (var i in back) {
         back[i].move(-1.01, Z_AXIS);
         drawables.push(back[i]);
     }
 
     mid = makeSide(shaders, colors);
-    for (i in mid) {
+    for (var i in mid) {
         drawables.push(mid[i]);
     }
-
-    //orbit();
-
-    renderScene(); // begin render loop
-};
+}
 
 function makeSide(shaders, colors) {
-  var side = []
+    var side = []
 
-  for(var i = 0; i < 9; i++) {
-    side.push(new Cube(shaders, colors));
-  }
+    for (var i = 0; i < 9; i++) {
+        //for(var j = 0; j<9; j++){
+        //side.push(new Cube(shaders, colors[j]));
+        //}
+        side.push(new Cube(shaders, colors));
+    }
 
-  side[1].move(1.01, X_AXIS);   
+    side[1].move(1.01, X_AXIS);
 
-  side[2].move(-1.01, X_AXIS); 
+    side[2].move(-1.01, X_AXIS);
 
-  side[3].move(1.01, Y_AXIS);  
+    side[3].move(1.01, Y_AXIS);
 
-  side[4].move(-1.01, Y_AXIS);  
+    side[4].move(-1.01, Y_AXIS);
 
-  side[5].move(-1.01, Y_AXIS);  
-  side[5].move(-1.01, X_AXIS);
+    side[5].move(-1.01, Y_AXIS);
+    side[5].move(-1.01, X_AXIS);
 
-  side[6].move(1.01, Y_AXIS);  
-  side[6].move(-1.01, X_AXIS);
+    side[6].move(1.01, Y_AXIS);
+    side[6].move(-1.01, X_AXIS);
 
-  side[7].move(-1.01, Y_AXIS); 
-  side[7].move(1.01, X_AXIS);
+    side[7].move(-1.01, Y_AXIS);
+    side[7].move(1.01, X_AXIS);
 
-  side[8].move(1.01, Y_AXIS);   
-  side[8].move(1.01, X_AXIS);
+    side[8].move(1.01, Y_AXIS);
+    side[8].move(1.01, X_AXIS);
 
-  return side;
+    return side;
 
 }
 
 // start off by trying to orbit the cubes on green face(drawables[0-9])
 // need to think about arranging cubes to get a side mathematically...want to just work on orbit function for now...
 function orbit() {
-  var cubes1 = drawables.slice(0, 9);
-  var cubes2 = drawables.slice(9, 18);
-  var cubes3 = drawables.slice(18, 27);
-  var center = cubes1[19];  //center?
-  for(cube in cubes1) {			//front
-    cubes1[cube].startLeftTurn();
-  }
-  for(cube in cubes2) {			//back
-	cubes2[cube].startLeftTurn();
-  }
-  for(cube in cubes3) {			//middle
-	cubes3[cube].startLeftTurn();
-  }
+    var cubes1 = drawables.slice(0, 9);
+    var cubes2 = drawables.slice(9, 18);
+    var cubes3 = drawables.slice(18, 27);
+    var center = cubes1[19];  //center?
+    for (cube in cubes1) {			//front
+        cubes1[cube].startLeftTurn();
+    }
+    for (cube in cubes2) {			//back
+        cubes2[cube].startLeftTurn();
+    }
+    for (cube in cubes3) {			//middle
+        cubes3[cube].startLeftTurn();
+    }
 }
 
 function rotateYellow() {
