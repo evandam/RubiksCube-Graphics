@@ -85,28 +85,7 @@ function initGL()
     btn_yellow.addEventListener("click",
         function(){
             disableBtns();
-			curCubies = yellow.split(" ");
-			while (curCube < curCubies.length)
-			{
-				drawables[curCubies[curCube]].startRightTurn();
-				curCube++;
-			}
-			
-			//resets cubies				
-			var temp = drawables[6];
-			drawables[6] = drawables[8];
-			drawables[8] = drawables[17];
-			drawables[17] = drawables[15];
-			drawables[15] = temp;
-			temp = drawables[3];
-			drawables[3] = drawables[26];
-			drawables[26] = drawables[12];
-			drawables[12] = drawables[24];	
-			drawables[24] = temp;
-			
-			//resets variables
-			curCube = 0;
-			curCubies = "";
+            rotateYellow();
         },
         false
     );	
@@ -115,28 +94,7 @@ function initGL()
     btn_white.addEventListener("click",
         function(){
             disableBtns();
-			curCubies = white.split(" ");
-			while (curCube < curCubies.length)
-			{
-				drawables[curCubies[curCube]].startRightTurn();
-				curCube++;
-			}
-			
-			//resets cubies	
-			var temp = drawables[13];
-			drawables[13] = drawables[23];
-			drawables[23] = drawables[4];
-			drawables[4] = drawables[25];
-			drawables[25] = temp;
-			temp = drawables[16];
-			drawables[16] = drawables[14];
-			drawables[14] = drawables[5];
-			drawables[5] = drawables[7];	
-			drawables[7] = temp;
-			
-			//resets variables
-			curCube = 0;
-			curCubies = "";
+            rotateWhite();
         },
         false
     );
@@ -145,29 +103,7 @@ function initGL()
     btn_green.addEventListener("click",
         function(){
             disableBtns();
-			
-			curCubies = green.split(" ");
-			while (curCube < curCubies.length)
-			{
-				drawables[curCubies[curCube]].startForwardTurn();
-				curCube++;
-			}
-			
-			//resets cubies	
-			var temp = drawables[3];
-			drawables[3] = drawables[2];
-			drawables[2] = drawables[4];
-			drawables[4] = drawables[1];
-			drawables[1] = temp;
-			temp = drawables[8];
-			drawables[8] = drawables[6];
-			drawables[6] = drawables[5];
-			drawables[5] = drawables[7];	
-			drawables[7] = temp;	
-			
-			//resets variables
-			curCube = 0;
-			curCubies = "";
+            rotateGreen();
 		},
         false
     );
@@ -176,29 +112,7 @@ function initGL()
     btn_blue.addEventListener("click",
         function(){
             disableBtns();
-			
-			curCubies = blue.split(" ");
-			while (curCube < curCubies.length)
-			{
-				drawables[curCubies[curCube]].startForwardTurn();
-				curCube++;
-			}
-
-			//resets cubies	
-			var temp = drawables[12];
-			drawables[12] = drawables[11];
-			drawables[11] = drawables[13];
-			drawables[13] = drawables[10];
-			drawables[10] = temp;
-			temp = drawables[17];
-			drawables[17] = drawables[15];
-			drawables[15] = drawables[14];
-			drawables[14] = drawables[16];	
-			drawables[16] = temp;		
-
-			//resets variables
-			curCube = 0;
-			curCubies = "";
+            rotateBlue();
 		},
         false
     );
@@ -207,29 +121,7 @@ function initGL()
     btn_red.addEventListener("click",
         function(){
             disableBtns();
-			
-			curCubies = red.split(" ");
-			while (curCube < curCubies.length)
-			{
-				drawables[curCubies[curCube]].startFarTurn();
-				curCube++;
-			}
-			
-			//resets cubies				
-			var temp = drawables[24];
-			drawables[24] = drawables[2];
-			drawables[2] = drawables[23];
-			drawables[23] = drawables[11];
-			drawables[11] = temp;
-			temp = drawables[15];
-			drawables[15] = drawables[6];
-			drawables[6] = drawables[5];
-			drawables[5] = drawables[14];	
-			drawables[14] = temp;
-			
-			//resets variables
-			curCube = 0;
-			curCubies = "";
+            rotateRed();
 		},
         false
     );
@@ -238,29 +130,7 @@ function initGL()
     btn_orange.addEventListener("click",
         function(){
             disableBtns();
-			
-			curCubies = orange.split(" ");
-			while (curCube < curCubies.length)
-			{
-				drawables[curCubies[curCube]].startNearTurn();
-				curCube++;
-			}
-
-			//resets cubies			
-			var temp = drawables[26];
-			drawables[26] = drawables[1];
-			drawables[1] = drawables[25];
-			drawables[25] = drawables[10];
-			drawables[10] = temp;
-			temp = drawables[17];
-			drawables[17] = drawables[8];
-			drawables[8] = drawables[7];
-			drawables[7] = drawables[16];	
-			drawables[16] = temp;
-			
-			//resets variables
-			curCube = 0;
-			curCubies = "";			
+            rotateOrange();
 		},
         false
     );

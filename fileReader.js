@@ -1,7 +1,7 @@
 ﻿// read in a file via HTML5's File API
 // parse out the cube state, initialize a cube and solve it
 var lines;
-document.getElementById('fileInput').addEventListener('change', function (evt) {
+document.getElementById('stateFileInput').addEventListener('change', function (evt) {
     var f = evt.target.files[0];
     var reader = new FileReader();
     reader.onload = (function () {
@@ -26,8 +26,47 @@ document.getElementById('fileInput').addEventListener('change', function (evt) {
             var o_side = lines.slice(6, 9);
             var w_side = lines.slice(9);
 
-            console.log(o_side);
-            console.log(w_side);
+
+
+        }
+    })(f);
+    reader.readAsText(f);
+});
+
+document.getElementById('solutionFileInput').addEventListener('change', function (evt) {
+    var f = evt.target.files[0];
+    var reader = new FileReader();
+    reader.onload = (function () {
+        return function (e) {
+            var solution = e.target.result.split('');
+            // the first value is the color of the face to rotate,
+            // the second is the number of times to turn it.
+            for (var i = 0; i < solution.length; i += 2) {
+                var face = solution[i];
+                var num_turns = solution[i + 1];
+                for (var j = 1; j <= num_turns; j++) {
+                    switch (face) {
+                        case 'R':
+                            rotateRed();
+                            break;
+                        case 'O':
+                            rotateOrange();
+                            break;
+                        case 'Y':
+                            rotateYellow();
+                            break;
+                        case 'G':
+                            rotateGreen();
+                            break;
+                        case 'B':
+                            rotateBlue();
+                            break;
+                        case 'W':
+                            rotateWhite();
+                            break;
+                    }
+                }
+            }
         }
     })(f);
     reader.readAsText(f);

@@ -230,14 +230,22 @@ Cube.prototype.move = function(dist, axis){
     this.transform = mult(translate(delta), this.transform);
 }
 
-/* Rotate this cube around the specified canonical axis. */
-Cube.prototype.turn = function(angle, axis){
+/* Rotate this cube around the center of the rubiks cube. */
+Cube.prototype.turn = function (angle, axis) {
     var avec = [0, 0, 0];
 
     if (axis === undefined) axis = Y_AXIS;
     avec[axis] = 1;
 
     this.transform = mult(rotate(angle, avec), this.transform);
+}
+
+/* Rotate this cube around the specified canonical axis. */
+Cube.prototype.turnSingle = function (angle, axis) {
+    var avec = [0, 0, 0];
+    if (axis === undefined) axis = Y_AXIS;
+    avec[axis] = 1;
+    this.transform = mult(this.transform, rotate(angle, avec));
 }
 
 /* Init the member var so it will be read in the draw function */
@@ -346,6 +354,150 @@ function orbit() {
   for(cube in cubes3) {			//middle
 	cubes3[cube].startLeftTurn();
   }
+}
+
+function rotateYellow() {
+    curCubies = yellow.split(" ");
+    while (curCube < curCubies.length) {
+        drawables[curCubies[curCube]].startRightTurn();
+        curCube++;
+    }
+
+    //resets cubies				
+    var temp = drawables[6];
+    drawables[6] = drawables[8];
+    drawables[8] = drawables[17];
+    drawables[17] = drawables[15];
+    drawables[15] = temp;
+    temp = drawables[3];
+    drawables[3] = drawables[26];
+    drawables[26] = drawables[12];
+    drawables[12] = drawables[24];
+    drawables[24] = temp;
+
+    //resets variables
+    curCube = 0;
+    curCubies = "";
+}
+
+function rotateWhite() {
+    curCubies = white.split(" ");
+    while (curCube < curCubies.length) {
+        drawables[curCubies[curCube]].startRightTurn();
+        curCube++;
+    }
+
+    //resets cubies	
+    var temp = drawables[13];
+    drawables[13] = drawables[23];
+    drawables[23] = drawables[4];
+    drawables[4] = drawables[25];
+    drawables[25] = temp;
+    temp = drawables[16];
+    drawables[16] = drawables[14];
+    drawables[14] = drawables[5];
+    drawables[5] = drawables[7];
+    drawables[7] = temp;
+
+    //resets variables
+    curCube = 0;
+    curCubies = "";
+}
+
+function rotateGreen() {
+    curCubies = green.split(" ");
+    while (curCube < curCubies.length) {
+        drawables[curCubies[curCube]].startForwardTurn();
+        curCube++;
+    }
+
+    //resets cubies	
+    var temp = drawables[3];
+    drawables[3] = drawables[2];
+    drawables[2] = drawables[4];
+    drawables[4] = drawables[1];
+    drawables[1] = temp;
+    temp = drawables[8];
+    drawables[8] = drawables[6];
+    drawables[6] = drawables[5];
+    drawables[5] = drawables[7];
+    drawables[7] = temp;
+
+    //resets variables
+    curCube = 0;
+    curCubies = "";
+}
+
+function rotateBlue() {
+    curCubies = blue.split(" ");
+    while (curCube < curCubies.length) {
+        drawables[curCubies[curCube]].startForwardTurn();
+        curCube++;
+    }
+
+    //resets cubies	
+    var temp = drawables[12];
+    drawables[12] = drawables[11];
+    drawables[11] = drawables[13];
+    drawables[13] = drawables[10];
+    drawables[10] = temp;
+    temp = drawables[17];
+    drawables[17] = drawables[15];
+    drawables[15] = drawables[14];
+    drawables[14] = drawables[16];
+    drawables[16] = temp;
+
+    //resets variables
+    curCube = 0;
+    curCubies = "";
+}
+
+function rotateRed() {
+    curCubies = red.split(" ");
+    while (curCube < curCubies.length) {
+        drawables[curCubies[curCube]].startFarTurn();
+        curCube++;
+    }
+
+    //resets cubies				
+    var temp = drawables[24];
+    drawables[24] = drawables[2];
+    drawables[2] = drawables[23];
+    drawables[23] = drawables[11];
+    drawables[11] = temp;
+    temp = drawables[15];
+    drawables[15] = drawables[6];
+    drawables[6] = drawables[5];
+    drawables[5] = drawables[14];
+    drawables[14] = temp;
+
+    //resets variables
+    curCube = 0;
+    curCubies = "";
+}
+
+function rotateOrange() {
+    curCubies = orange.split(" ");
+    while (curCube < curCubies.length) {
+        drawables[curCubies[curCube]].startNearTurn();
+        curCube++;
+    }
+
+    //resets cubies			
+    var temp = drawables[26];
+    drawables[26] = drawables[1];
+    drawables[1] = drawables[25];
+    drawables[25] = drawables[10];
+    drawables[10] = temp;
+    temp = drawables[17];
+    drawables[17] = drawables[8];
+    drawables[8] = drawables[7];
+    drawables[7] = drawables[16];
+    drawables[16] = temp;
+
+    //resets variables
+    curCube = 0;
+    curCubies = "";
 }
 
 
