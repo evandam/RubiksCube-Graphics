@@ -105,7 +105,7 @@ Cube.prototype.draw = function () {
     }
 
     else if (this.far_turns > 0) {
-        this.turn(-1, X_AXIS);
+        this.turn(1, X_AXIS);
         this.far_turns--;
         if (this.far_turns === 0) {
             enableBtns();
@@ -623,7 +623,7 @@ function rotateYellow() {
 function rotateWhite() {
     curCubies = white.split(" ");
     while (curCube < curCubies.length) {
-        drawables[curCubies[curCube]].startRightTurn();
+        drawables[curCubies[curCube]].startLeftTurn();
         curCube++;
     }
 
@@ -671,7 +671,7 @@ function rotateGreen() {
 function rotateBlue() {
     curCubies = blue.split(" ");
     while (curCube < curCubies.length) {
-        drawables[curCubies[curCube]].startForwardTurn();
+        drawables[curCubies[curCube]].startBackwardTurn();
         curCube++;
     }
 
