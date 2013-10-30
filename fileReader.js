@@ -49,20 +49,13 @@ document.getElementById('stateFileInput').addEventListener('change', function (e
             o_side = string.slice(36, 45);
 
             w_side = string.slice(45, 54);
-            
-            // color the centers
-            colors[0][0] = COLORS[g_side[4]];
-            colors[19][1] = COLORS[o_side[4]];
-            colors[22][2] = COLORS[w_side[4]];
-            colors[21][3] = COLORS[y_side[4]];
-            colors[9][4] = COLORS[b_side[4]];
-            colors[20][5] = COLORS[r_side[4]];
               
             // set the red face
             colors[5][5] = COLORS[r_side[0]];
             colors[23][5] = COLORS[r_side[1]];
             colors[14][5] = COLORS[r_side[2]];
             colors[2][5] = COLORS[r_side[3]];
+            colors[20][5] = COLORS[r_side[4]];
             colors[11][5] = COLORS[r_side[5]];
             colors[6][5] = COLORS[r_side[6]];
             colors[24][5] = COLORS[r_side[7]];
@@ -73,6 +66,7 @@ document.getElementById('stateFileInput').addEventListener('change', function (e
             colors[2][0] = COLORS[g_side[1]];
             colors[6][0] = COLORS[g_side[2]];
             colors[4][0] = COLORS[g_side[3]];
+            colors[0][0] = COLORS[g_side[4]];
             colors[3][0] = COLORS[g_side[5]];
             colors[7][0] = COLORS[g_side[6]];
             colors[1][0] = COLORS[g_side[7]];
@@ -83,6 +77,7 @@ document.getElementById('stateFileInput').addEventListener('change', function (e
             colors[24][3] = COLORS[y_side[1]];
             colors[15][3] = COLORS[y_side[2]];
             colors[3][3] = COLORS[y_side[3]];
+            colors[21][3] = COLORS[y_side[4]];
             colors[12][3] = COLORS[y_side[5]];
             colors[8][3] = COLORS[y_side[6]];
             colors[26][3] = COLORS[y_side[7]];

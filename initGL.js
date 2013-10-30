@@ -31,6 +31,9 @@ var lightAmbient = vec4(0.1, 0.1, 0.1, 1.0);
 var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 
+lightDiffuse = vec4(0, 0, 0, 1);
+lightSpecular = vec4(0, 0, 0, 1);
+
 /* Initialize global WebGL stuff - not object specific */
 function initGL()
 {
@@ -51,7 +54,7 @@ function initGL()
 //    projection = mult(projection, rotate(30, [0.5, 1, 0.12]));
 
     projection = perspective(45, canvas.width / canvas.height, 1, 100);
-    var camera = lookAt([10, 5, 10], [0, 0, 0], [0, 1, 0]);
+    var camera = lookAt([10, 5, -10], [0, 0, 0], [0, 1, 0]);
 
     projection = mult(projection, camera);
 
