@@ -517,31 +517,72 @@ function makeCubesFromColors(colors) {
 
 }
 
-// initialize all 27 cubies
+// initialize all 27 cubies default in goal state
 function makeCubes() {
-    drawables = [];
-    // load and compile our shaders into a program object
-    var shaders = initShaders(gl, "vertex-shader", "fragment-shader");
+    colors[5][5] = COLORS['R'];
+    colors[23][5] = COLORS['R'];
+    colors[14][5] = COLORS['R'];
+    colors[2][5] = COLORS['R'];
+    colors[20][5] = COLORS['R'];
+    colors[11][5] = COLORS['R'];
+    colors[6][5] = COLORS['R'];
+    colors[24][5] = COLORS['R'];
+    colors[15][5] = COLORS['R'];
 
-    // define custom colors
-    var colors = setColors('G');
+    // set the green face
+    colors[5][0] = COLORS['G'];
+    colors[2][0] = COLORS['G'];
+    colors[6][0] = COLORS['G'];
+    colors[4][0] = COLORS['G'];
+    colors[0][0] = COLORS['G'];
+    colors[3][0] = COLORS['G'];
+    colors[7][0] = COLORS['G'];
+    colors[1][0] = COLORS['G'];
+    colors[8][0] = COLORS['G'];
 
-    var front = makeSide(shaders, colors);
-    for (var i in front) {
-        front[i].move(1.01, Z_AXIS);
-        drawables.push(front[i]);
-    }
+    // set the yellow face
+    colors[6][3] = COLORS['Y'];
+    colors[24][3] = COLORS['Y'];
+    colors[15][3] = COLORS['Y'];
+    colors[3][3] = COLORS['Y'];
+    colors[21][3] = COLORS['Y'];
+    colors[12][3] = COLORS['Y'];
+    colors[8][3] = COLORS['Y'];
+    colors[26][3] = COLORS['Y'];
+    colors[17][3] = COLORS['Y'];
 
-    back = makeSide(shaders, colors);
-    for (var i in back) {
-        back[i].move(-1.01, Z_AXIS);
-        drawables.push(back[i]);
-    }
+    // set the blue face
+    colors[15][4] = COLORS['B'];
+    colors[11][4] = COLORS['B'];
+    colors[14][4] = COLORS['B'];
+    colors[12][4] = COLORS['B'];
+    colors[9][4] = COLORS['B'];
+    colors[13][4] = COLORS['B'];
+    colors[17][4] = COLORS['B'];
+    colors[10][4] = COLORS['B'];
+    colors[16][4] = COLORS['B'];
 
-    mid = makeSide(shaders, colors);
-    for (var i in mid) {
-        drawables.push(mid[i]);
-    }
+    // set the orange face
+    colors[8][1] = COLORS['O'];
+    colors[26][1] = COLORS['O'];
+    colors[17][1] = COLORS['O'];
+    colors[1][1] = COLORS['O'];
+    colors[19][1] = COLORS['O'];
+    colors[10][1] = COLORS['O'];
+    colors[7][1] = COLORS['O'];
+    colors[25][1] = COLORS['O'];
+    colors[16][1] = COLORS['O'];
+
+    // set the white face (last but not least)
+    colors[7][2] = COLORS['W'];
+    colors[25][2] = COLORS['W'];
+    colors[16][2] = COLORS['W'];
+    colors[4][2] = COLORS['W'];
+    colors[22][2] = COLORS['W'];
+    colors[13][2] = COLORS['W'];
+    colors[5][2] = COLORS['W'];
+    colors[23][2] = COLORS['W'];
+    colors[14][2] = COLORS['W'];
 }
 
 function makeSide(shaders, colors) {
@@ -703,7 +744,7 @@ function rotateBlue() {
     drawables[15] = drawables[17];
     drawables[17] = drawables[16];
     drawables[16] = drawables[14];
-    drawables[14] = tmp;
+    drawables[14] = temp;
     temp = drawables[11];
     drawables[11] = drawables[12];
     drawables[12] = drawables[10];
