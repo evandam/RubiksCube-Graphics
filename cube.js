@@ -15,6 +15,16 @@
 var Cube = function (program, faceColors) { this.init(program, faceColors); }
 var isTurning = false;  // we should only be performing one rotation at a time
 
+// an easy to access map of colors to vectors
+const COLORS = {
+    G: vec4(0.0, 0.7, 0.0, 1.0),   // green - front
+    O: vec4(1.0, 0.2, 0.0, 1.0),   // orange - right
+    W: vec4(1.0, 1.0, 1.0, 1.0),   // white - bottom
+    Y: vec4(1.0, 1.0, 0.0, 1.0),   // yellow - top
+    B: vec4(0.0, 0.0, 1.0, 1.0),   // blue - back
+    R: vec4(1.0, 0.0, 0.0, 1.0)    // red - left
+};
+
 /* Initialize properties of this color cube object. 
  */
 Cube.prototype.init = function (program, faceColors) {
@@ -214,21 +224,6 @@ Cube.prototype.mkquad = function (a, b, c, d, color) {
         this.colors.push(color);
         this.normalsArray.push(normal);
     }
-
-    // DRAW BORDERS HERE TOO
-    var black = vec4(0.0, 0.0, 0.0, 1.0);
-    /*this.points.push(vec4(this.vertices[a]));
-    this.colors.push(black);
-    this.points.push(vec4(this.vertices[b]));
-    this.colors.push(black);
-    this.points.push(vec4(this.vertices[c]));
-    this.colors.push(black);
-    this.points.push(vec4(this.vertices[a]));
-    this.colors.push(black);
-    this.points.push(vec4(this.vertices[c]));
-    this.colors.push(black);
-    this.points.push(vec4(this.vertices[d]));
-    this.colors.push(black);*/
 };
 
 /*
@@ -380,11 +375,149 @@ function setColors(currentSide) {
 window.onload = function () {
     initGL(); // basic WebGL setup for the scene 
 
-    makeCubes();
+    // makeCubes();
+    var colors = [];
+    for (var i = 0; i < 27; i++) {
+        colors[i] = [
+            COLORS.G,
+            COLORS.O,
+            COLORS.W,
+            COLORS.Y,
+            COLORS.B,
+            COLORS.R
+        ];
+    }
+    makeCubesFromColors(colors);
 
     renderScene(); // begin render loop
 };
 
+// colors is an array of arrays for each cubie
+// that specifies the visible faces
+function makeCubesFromColors(colors) {
+    
+    // load and compile our shaders into a program object
+    var shaders = initShaders(gl, "vertex-shader", "fragment-shader");
+
+    // make sure our drawables array is empty
+    drawables = [];
+
+    var dist = 1.03;
+
+    /* --- FRONT --- */
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, Z_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, Z_AXIS);
+    drawables[drawables.length - 1].move(dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, Z_AXIS);
+    drawables[drawables.length - 1].move(-dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, Z_AXIS);
+    drawables[drawables.length - 1].move(dist, Y_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, Z_AXIS);
+    drawables[drawables.length - 1].move(-dist, Y_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, Z_AXIS);
+    drawables[drawables.length - 1].move(-dist, Y_AXIS);
+    drawables[drawables.length - 1].move(-dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, Z_AXIS);
+    drawables[drawables.length - 1].move(dist, Y_AXIS);
+    drawables[drawables.length - 1].move(-dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, Z_AXIS);
+    drawables[drawables.length - 1].move(-dist, Y_AXIS);
+    drawables[drawables.length - 1].move(dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, Z_AXIS);
+    drawables[drawables.length - 1].move(dist, Y_AXIS);
+    drawables[drawables.length - 1].move(dist, X_AXIS);
+
+    /* --- back --- */
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, Z_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, Z_AXIS);
+    drawables[drawables.length - 1].move(dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, Z_AXIS);
+    drawables[drawables.length - 1].move(-dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, Z_AXIS);
+    drawables[drawables.length - 1].move(dist, Y_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, Z_AXIS);
+    drawables[drawables.length - 1].move(-dist, Y_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, Z_AXIS);
+    drawables[drawables.length - 1].move(-dist, Y_AXIS);
+    drawables[drawables.length - 1].move(-dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, Z_AXIS);
+    drawables[drawables.length - 1].move(dist, Y_AXIS);
+    drawables[drawables.length - 1].move(-dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, Z_AXIS);
+    drawables[drawables.length - 1].move(-dist, Y_AXIS);
+    drawables[drawables.length - 1].move(dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, Z_AXIS);
+    drawables[drawables.length - 1].move(dist, Y_AXIS);
+    drawables[drawables.length - 1].move(dist, X_AXIS);
+
+    /* --- MIDDLE --- */
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, Y_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, Y_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, Y_AXIS);
+    drawables[drawables.length - 1].move(-dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, Y_AXIS);
+    drawables[drawables.length - 1].move(-dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(-dist, Y_AXIS);
+    drawables[drawables.length - 1].move(dist, X_AXIS);
+
+    drawables[drawables.length] = new Cube(shaders, colors.shift());
+    drawables[drawables.length - 1].move(dist, Y_AXIS);
+    drawables[drawables.length - 1].move(dist, X_AXIS);
+
+}
+
+// initialize all 27 cubies
 function makeCubes() {
     drawables = [];
     // load and compile our shaders into a program object
