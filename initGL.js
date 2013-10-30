@@ -26,10 +26,10 @@ var drawables = []; // used to store any objects that need to be drawn
 
 // lighting variables - add another?
 
-var lightPosition = vec4(1.0, 1.0, 1.0, 0.0);
+var lightPosition = vec4(-3, -2, -4.0, 0.0);
 var lightAmbient = vec4(0.1, 0.1, 0.1, 1.0);
-var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
-var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
+var lightDiffuse = vec4(0.5, 0.5, 0.5, 1.0);
+var lightSpecular = vec4(0.9, 0.7, 0.7, 1.0);
 
 // lightDiffuse = vec4(0, 0, 0, 1);
 // lightSpecular = vec4(0, 0, 0, 1);
@@ -54,7 +54,7 @@ function initGL()
 //    projection = mult(projection, rotate(30, [0.5, 1, 0.12]));
 
     projection = perspective(45, canvas.width / canvas.height, 1, 100);
-    var camera = lookAt([10, 5, -10], [0, 0, 0], [0, 1, 0]);
+    var camera = lookAt([4, 3, -4], [0, -0.5, 0], [0, 1, 0]);
 
     projection = mult(projection, camera);
 
@@ -64,8 +64,9 @@ function initGL()
     // Camera is set up slightly above the cube looking at a corner
     var c = document.getElementById("Btn_Ortho");
     c.addEventListener("click", function () {
-        projection = ortho(-2, 2, -1.5, 1.5, -100, 100);
-        camera = lookAt([-3, -2, 3], [0, 0, 0], [0, 1, 0]);
+        projection = ortho(-3, 3, -2, 2, -100, 100);
+		camera = lookAt([8, 3, -10], [0, 0, 0], [0, 1, 0]);
+        //camera = lookAt([-3, -2, 3], [0, 0, 0], [0, 1, 0]);
         projection = mult(projection, camera);
     }, false);
 
@@ -74,7 +75,8 @@ function initGL()
     var d = document.getElementById("Btn_Perspective");
     d.addEventListener("click", function () {
         projection = perspective(45, canvas.width / canvas.height, 1, 100);
-        camera = lookAt([3, 2, 3], [0, 0, 0], [0, 1, 0]);
+		camera = lookAt([4, -2, 4], [0, -0.5, 0], [0, 1, 0]);
+        //camera = lookAt([3, 2, 3], [0, 0, 0], [0, 1, 0]);
         projection = mult(projection, camera);
     }, false);
 	

@@ -18,7 +18,7 @@ var isTurning = false;  // we should only be performing one rotation at a time
 // an easy to access map of colors to vectors
 const COLORS = {
     G: vec4(0.0, 0.7, 0.0, 1.0),   // green - front
-    O: vec4(1.0, 0.5, 0.0, 1.0),   // orange - right
+    O: vec4(1.0, 0.4, 0.0, 1.0),   // orange - right
     W: vec4(1.0, 1.0, 1.0, 1.0),   // white - bottom
     Y: vec4(1.0, 1.0, 0.0, 1.0),   // yellow - top
     B: vec4(0.0, 0.0, 1.0, 1.0),   // blue - back
@@ -34,7 +34,7 @@ Cube.prototype.init = function (program, faceColors) {
     this.transform = mat4(); // initialize object transform as identity matrix
 
     this.materialAmbient = vec4(0.1, 0.1, 0.1, 1.0);
-    this.materialDiffuse = vec4(0.6, 0.6, 0.6, 1.0);    // determines the color reflected
+    this.materialDiffuse = vec4(0.3, 0.3, 0.3, 1.0);    // determines the color reflected
     this.materialSpecular = vec4(0.7, 0.7, 0.7, 1.0);
     this.materialShininess = 100.0;
 
@@ -395,7 +395,7 @@ window.onload = function () {
 // colors is an array of arrays for each cubie
 // that specifies the visible faces
 function makeCubesFromColors(colors) {
-    
+
     // load and compile our shaders into a program object
     var shaders = initShaders(gl, "vertex-shader", "fragment-shader");
 
