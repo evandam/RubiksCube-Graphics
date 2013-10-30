@@ -31,8 +31,8 @@ var lightAmbient = vec4(0.1, 0.1, 0.1, 1.0);
 var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 
-lightDiffuse = vec4(0, 0, 0, 1);
-lightSpecular = vec4(0, 0, 0, 1);
+// lightDiffuse = vec4(0, 0, 0, 1);
+// lightSpecular = vec4(0, 0, 0, 1);
 
 /* Initialize global WebGL stuff - not object specific */
 function initGL()

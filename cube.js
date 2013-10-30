@@ -628,7 +628,7 @@ function rotateWhite() {
     }
 
     //resets cubies	
-    var temp = drawables[13];
+    /* var temp = drawables[13];
     drawables[13] = drawables[23];
     drawables[23] = drawables[4];
     drawables[4] = drawables[25];
@@ -638,6 +638,17 @@ function rotateWhite() {
     drawables[14] = drawables[5];
     drawables[5] = drawables[7];
     drawables[7] = temp;
+    */
+    var tmp = drawables[7];
+    drawables[7] = drawables[5];
+    drawables[5] = drawables[14];
+    drawables[14] = drawables[16];
+    drawables[16] = tmp;
+    tmp = drawables[25];
+    drawables[25] = drawables[4];
+    drawables[4] = drawables[23];
+    drawables[23] = drawables[13];
+    drawables[13] = tmp;
 
     //resets variables
     curCube = 0;
@@ -676,6 +687,7 @@ function rotateBlue() {
     }
 
     //resets cubies	
+    /*
     var temp = drawables[12];
     drawables[12] = drawables[11];
     drawables[11] = drawables[13];
@@ -686,6 +698,17 @@ function rotateBlue() {
     drawables[15] = drawables[14];
     drawables[14] = drawables[16];
     drawables[16] = temp;
+    */
+    var temp = drawables[15];
+    drawables[15] = drawables[17];
+    drawables[17] = drawables[16];
+    drawables[16] = drawables[14];
+    drawables[14] = tmp;
+    temp = drawables[11];
+    drawables[11] = drawables[12];
+    drawables[12] = drawables[10];
+    drawables[10] = drawables[13];
+    drawables[13] = temp;
 
     //resets variables
     curCube = 0;
@@ -700,6 +723,7 @@ function rotateRed() {
     }
 
     //resets cubies				
+    /*
     var temp = drawables[24];
     drawables[24] = drawables[2];
     drawables[2] = drawables[23];
@@ -710,6 +734,17 @@ function rotateRed() {
     drawables[6] = drawables[5];
     drawables[5] = drawables[14];
     drawables[14] = temp;
+    */
+    var temp = drawables[5];
+    drawables[5] = drawables[6];
+    drawables[6] = drawables[15];
+    drawables[15] = drawables[14];
+    drawables[14] = temp;
+    temp = drawables[23];
+    drawables[23] = drawables[2];
+    drawables[2] = drawables[24];
+    drawables[24] = drawables[11];
+    drawables[11] = temp;
 
     //resets variables
     curCube = 0;
