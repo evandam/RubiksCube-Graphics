@@ -49,40 +49,45 @@ document.getElementById('stateFileInput').addEventListener('change', function (e
             o_side = string.slice(36, 45);
 
             w_side = string.slice(45, 54);
-           
+            
+            // color the centers
+            colors[0][0] = COLORS[g_side[4]];
+            colors[19][1] = COLORS[o_side[4]];
+            colors[22][2] = COLORS[w_side[4]];
+            colors[21][3] = COLORS[y_side[4]];
+            colors[9][4] = COLORS[b_side[4]];
+            colors[20][5] = COLORS[r_side[4]];
+              
             // set the red face
             colors[5][5] = COLORS[r_side[0]];
             colors[23][5] = COLORS[r_side[1]];
             colors[14][5] = COLORS[r_side[2]];
             colors[2][5] = COLORS[r_side[3]];
-            colors[20][5] = COLORS[r_side[4]];
             colors[11][5] = COLORS[r_side[5]];
             colors[6][5] = COLORS[r_side[6]];
             colors[24][5] = COLORS[r_side[7]];
             colors[15][5] = COLORS[r_side[8]];
-
+            
             // set the green face
             colors[5][0] = COLORS[g_side[0]];
             colors[2][0] = COLORS[g_side[1]];
             colors[6][0] = COLORS[g_side[2]];
             colors[4][0] = COLORS[g_side[3]];
-            colors[0][0] = COLORS[g_side[4]];
             colors[3][0] = COLORS[g_side[5]];
             colors[7][0] = COLORS[g_side[6]];
             colors[1][0] = COLORS[g_side[7]];
             colors[8][0] = COLORS[g_side[8]];
-
+            
             // set the yellow face
             colors[6][3] = COLORS[y_side[0]];
             colors[24][3] = COLORS[y_side[1]];
             colors[15][3] = COLORS[y_side[2]];
             colors[3][3] = COLORS[y_side[3]];
-            colors[21][3] = COLORS[y_side[4]];
             colors[12][3] = COLORS[y_side[5]];
             colors[8][3] = COLORS[y_side[6]];
             colors[26][3] = COLORS[y_side[7]];
             colors[17][3] = COLORS[y_side[8]];
-
+            
             // set the blue face
             colors[15][4] = COLORS[b_side[0]];
             colors[11][4] = COLORS[b_side[1]];
@@ -93,7 +98,7 @@ document.getElementById('stateFileInput').addEventListener('change', function (e
             colors[17][4] = COLORS[b_side[6]];
             colors[10][4] = COLORS[b_side[7]];
             colors[16][4] = COLORS[b_side[8]];
-
+           
             // set the orange face
             colors[8][1] = COLORS[o_side[0]];
             colors[26][1] = COLORS[o_side[1]];
@@ -115,9 +120,7 @@ document.getElementById('stateFileInput').addEventListener('change', function (e
             colors[5][2] = COLORS[w_side[6]];
             colors[23][2] = COLORS[w_side[7]];
             colors[14][2] = COLORS[w_side[8]];
-
-            console.log(colors);
-
+            
             // reconstruct the drawables array
             makeCubesFromColors(colors);
 

@@ -25,6 +25,7 @@ const Z_AXIS = 2;
 var drawables = []; // used to store any objects that need to be drawn
 
 // lighting variables - add another?
+
 var lightPosition = vec4(1.0, 1.0, 1.0, 0.0);
 var lightAmbient = vec4(0.1, 0.1, 0.1, 1.0);
 var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
@@ -50,7 +51,7 @@ function initGL()
 //    projection = mult(projection, rotate(30, [0.5, 1, 0.12]));
 
     projection = perspective(45, canvas.width / canvas.height, 1, 100);
-    var camera = lookAt([3, 2, 6], [0, 0, 0], [0, 1, 0]);
+    var camera = lookAt([10, 5, 10], [0, 0, 0], [0, 1, 0]);
 
     projection = mult(projection, camera);
 

@@ -18,7 +18,7 @@ var isTurning = false;  // we should only be performing one rotation at a time
 // an easy to access map of colors to vectors
 const COLORS = {
     G: vec4(0.0, 0.7, 0.0, 1.0),   // green - front
-    O: vec4(1.0, 0.2, 0.0, 1.0),   // orange - right
+    O: vec4(1.0, 0.5, 0.0, 1.0),   // orange - right
     W: vec4(1.0, 1.0, 1.0, 1.0),   // white - bottom
     Y: vec4(1.0, 1.0, 0.0, 1.0),   // yellow - top
     B: vec4(0.0, 0.0, 1.0, 1.0),   // blue - back
